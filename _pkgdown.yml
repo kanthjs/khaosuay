@@ -1,5 +1,4 @@
 url: https://kanthjs.github.io/KhaoSuay/
-
 template:
   bootstrap: 5
   bootswatch: minty
@@ -59,5 +58,6 @@ reference:
 
 footer:
   structure:
-    left: developed_by Kanthanawit Jaisong
-    right: built_with [pkgdown](https://pkgdown.r-lib.org)
+    left: developed_by
+    right: built_with
+
