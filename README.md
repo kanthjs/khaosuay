@@ -1,4 +1,4 @@
-# khaosuay <img src="man/figures/khaosuay-hexlogo-nobg.jpg" align="right" height="139" alt="khaosuay hex logo"/>
+# khaosuay <img src="man/figures/khaosuay-hexlogo-nobg.png" align="right" height="139" alt="khaosuay hex logo"/>
 
 > **ข้าวสวย** — R Package สำหรับวิเคราะห์ข้อมูลการทดลองทางเกษตรกรรมในบริบทของไทย
 > เปลี่ยนข้อมูลดิบให้กลายเป็นรายงานสถิติที่พร้อมใช้งาน เหมือนข้าวสวยหุงสุกใหม่ที่พร้อมเสิร์ฟ
