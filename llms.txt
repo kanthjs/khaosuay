@@ -1,4 +1,4 @@
-# khaosuay ![khaosuay hex logo](reference/figures/khaosuay-hexlogo-nobg.jpg)
+# khaosuay ![khaosuay hex logo](reference/figures/khaosuay-hexlogo-nobg.png)
 
 > **ข้าวสวย** — R Package
 > สำหรับวิเคราะห์ข้อมูลการทดลองทางเกษตรกรรมในบริบทของไทย

@@ -3,7 +3,7 @@ pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   getting-started: getting-started.html
-last_built: 2026-03-08T09:32Z
+last_built: 2026-03-08T09:39Z
 urls:
   reference: https://kanthjs.github.io/KhaoSuay/reference
   article: https://kanthjs.github.io/KhaoSuay/articles
