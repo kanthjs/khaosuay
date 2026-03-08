@@ -1,0 +1,9 @@
+^renv$
+^renv\.lock$
+^.*\.Rproj$
+^\.Rproj\.user$
+^SKILL\.md$
+^khaosuay-hexlogo\.jpg$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
