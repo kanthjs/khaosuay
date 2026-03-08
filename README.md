@@ -1,28 +1,117 @@
-ข้าวสวย หรือ KhaoSuay (KhaoSuay: Knowledge-based Harvest & Agricultural Output: Statistical Unified Analysis for Yield) package เพื่อ รวบรวม ฟังชั่นที่ใช้วิเคราะห์ ข้อมูลทางการเกาตร ในบริยทของไทย โดย จะทำ document ที่เป็นภาษาไทย และ สนับสนุน ภาษไทยอย่างยิ่งยวด
- 
- รวบรวมฟังชั้น ที่ทำทั้ง 3 ขั้นตอน
+# khaosuay <img src="man/figures/khaosuay-hexlogo-nobg.jpg" align="right" height="139" alt="khaosuay hex logo"/>
 
-1. ขั้นตอนการเตรียม (Data Cleaning)
+> **ข้าวสวย** — R Package สำหรับวิเคราะห์ข้อมูลการทดลองทางเกษตรกรรมในบริบทของไทย
+> เปลี่ยนข้อมูลดิบให้กลายเป็นรายงานสถิติที่พร้อมใช้งาน เหมือนข้าวสวยหุงสุกใหม่ที่พร้อมเสิร์ฟ
 
-wash_rice(): การทำความสะอาดข้อมูล (Cleaning Data) ลบข้อมูลที่ผิดพลาด หรือจัดการ Missing Values
+---
 
-pick_grain(): การเลือกเฉพาะตัวแปรหรือคอลัมน์ที่ต้องการ (Select variables)
+## ทำไมต้อง khaosuay?
 
-2. ขั้นตอนการหุง (Statistical Modeling)
+การวิเคราะห์สถิติทางการเกษตร (เช่น RCBD, Split-plot) มักมีความยุ่งยากในการเตรียมข้อมูลและการสร้างกราฟเพื่อเขียนรายงาน `khaosuay` จึงเกิดขึ้นมาเพื่อ:
 
-cook_rcbd(): การวิเคราะห์ ANOVA สำหรับแผน RCBD (หุงข้าวแบบมาตรฐาน)
+- **ลดขั้นตอนที่ซับซ้อน** — เปลี่ยน syntax ยากๆ ให้เป็นฟังก์ชันที่เข้าใจง่ายในคอนเซปต์การ "หุงข้าว"
+- **รองรับภาษาไทย** — แก้ไขปัญหา font ภาษาไทยในกราฟที่นักวิจัยไทยมักเจอ
+- **พร้อมทำรายงาน** — สร้างตาราง ANOVA และกราฟเปรียบเทียบค่าเฉลี่ยที่ใส่ตัวอักษร (a, b, c) โดยอัตโนมัติ
 
-cook_split(): การวิเคราะห์สำหรับ Split-plot (หุงข้าวแบบมีชั้นเชิง)
+---
 
-check_doneness(): การเช็ค Assumptions ของสถิติ (เช่น Normality, Homogeneity)
+## การติดตั้ง
 
-3. ขั้นตอนการจัดจาน (Visualization & Reporting)
+```r
+# install.packages("pak")
+pak::pak("kanthjs/khaosuay")
+```
 
-serve_plate(): การสร้างกราฟที่สวยงาม (ggplot2 wrapper) ให้พร้อมเสิร์ฟในรายงาน
+---
 
-top_with_sig(): การใส่ตัวอักษรแสดงความแตกต่างทางสถิติ (a, b, c) ลงบนหัวกราฟแท่ง
+## ขั้นตอนการใช้งาน (The Cooking Workflow)
 
-steam_report(): การ Export ผลลัพธ์ออกมาเป็นไฟล์ Word/PDF
+การใช้ `khaosuay` ง่ายเหมือนการหุงข้าวหนึ่งหม้อ แบ่งเป็น 4 ขั้นตอน:
 
+### 1. ล้างข้าว — เตรียมข้อมูล
 
-## อยากเริ่มต้น ด้วย การใช้ ข้อมูลจาก agridat package
+```r
+library(khaosuay)
+
+clean_data <- wash_rice(my_agri_data)
+```
+
+### 2. หุงข้าว — วิเคราะห์แผนการทดลอง RCBD
+
+```r
+model <- cook_rcbd(
+  data      = clean_data,
+  outcome   = "yield",
+  treatment = "variety",
+  block     = "rep"
+)
+```
+
+### 3. โรยหน้า — ทดสอบความแตกต่างทางสถิติ
+
+```r
+results <- top_with_sig(model, treatment = "variety")
+```
+
+ตัวอักษรที่เหมือนกัน (a, b, c) หมายความว่าไม่แตกต่างกันทางสถิติที่ระดับนัยสำคัญ 0.05
+
+### 4. จัดจาน — สร้างกราฟรายงาน
+
+```r
+setup_thai_font()
+
+serve_plate(
+  data  = results,
+  x     = "variety",
+  y     = "yield",
+  title = "เปรียบเทียบผลผลิตข้าวแต่ละสายพันธุ์"
+)
+```
+
+---
+
+## ตัวอย่างจากข้อมูลจริง
+
+ใช้ข้อมูล `gomez.nitrogen` จากแพ็กเกจ `agridat` (ผลของปุ๋ยไนโตรเจนต่อผลผลิตข้าว):
+
+```r
+library(khaosuay)
+library(agridat)
+
+data(gomez.nitrogen)
+
+# ครบ workflow ใน 3 บรรทัด
+clean  <- wash_rice(gomez.nitrogen)
+model  <- cook_rcbd(clean, "nitro", "trt", "rep")
+result <- top_with_sig(model, "trt")
+```
+
+ผลลัพธ์ตัวอย่าง:
+
+| Treatment (Nitro) | Mean Yield | Significance |
+|:-----------------:|:----------:|:------------:|
+| 140               | 5,235      | a            |
+| 110               | 4,892      | ab           |
+| ...               | ...        | ...          |
+
+---
+
+## ฟังก์ชันทั้งหมด
+
+| ฟังก์ชัน | ความหมาย | หน้าที่ |
+|---|---|---|
+| `wash_rice()` | ล้างข้าว | ลบแถวที่มี NA ออกจากข้อมูล |
+| `cook_rcbd()` | หุงข้าว RCBD | วิเคราะห์ ANOVA แบบ RCBD |
+| `top_with_sig()` | โรยหน้าด้วยสถิติ | Duncan's multiple range test |
+| `serve_plate()` | จัดจานข้าวสวย | สร้าง bar chart รายงาน |
+| `setup_thai_font()` | ตั้งค่าฟอนต์ | โหลด font Sarabun สำหรับกราฟภาษาไทย |
+
+---
+
+## การมีส่วนร่วม
+
+หากพบ bug หรือมีไอเดียอยากเพิ่ม "เมนู" ใหม่ๆ สามารถเปิด Issue หรือส่ง Pull Request มาได้เลย!
+
+## สัญญาอนุญาต
+
+Distributed under the MIT License. See `LICENSE` for more information.

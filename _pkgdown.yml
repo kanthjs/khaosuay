@@ -1,4 +1,63 @@
-url: ~
+url: https://kanthjs.github.io/KhaoSuay/
+
 template:
   bootstrap: 5
+  bootswatch: minty
+  bslib:
+    primary: "#2c3e50"
+    link-color: "#2d6a4f"
 
+home:
+  title: "khaosuay — วิเคราะห์ข้อมูลเกษตรกรรมแบบสนุก"
+  description: >
+    แพ็กเกจ R สำหรับวิเคราะห์แผนการทดลองเกษตรกรรมด้วย workflow
+    ที่ใช้คำอุปมาจากการหุงข้าว
+
+navbar:
+  bg: primary
+  structure:
+    left: [intro, reference, articles]
+    right: [search, github]
+  components:
+    intro:
+      text: "เริ่มต้น"
+      href: articles/getting-started.html
+    reference:
+      text: "ฟังก์ชัน"
+      href: reference/index.html
+    articles:
+      text: "บทความ"
+      menu:
+        - text: "เริ่มต้นใช้งาน khaosuay"
+          href: articles/getting-started.html
+
+reference:
+  - title: "การเตรียมข้อมูล"
+    desc: "ทำความสะอาดข้อมูลก่อนวิเคราะห์"
+    contents:
+      - wash_rice
+
+  - title: "การวิเคราะห์แผนการทดลอง"
+    desc: "วิเคราะห์ ANOVA สำหรับแผนการทดลอง RCBD"
+    contents:
+      - cook_rcbd
+
+  - title: "การทดสอบความแตกต่าง"
+    desc: "ทดสอบความแตกต่างระหว่างกรรมวิธีด้วย Duncan's test"
+    contents:
+      - top_with_sig
+
+  - title: "การสร้างกราฟ"
+    desc: "แสดงผลการทดลองในรูปแบบกราฟ"
+    contents:
+      - serve_plate
+
+  - title: "การตั้งค่า"
+    desc: "ตั้งค่าฟอนต์และสภาพแวดล้อม"
+    contents:
+      - setup_thai_font
+
+footer:
+  structure:
+    left: developed_by Kanthanawit Jaisong
+    right: built_with [pkgdown](https://pkgdown.r-lib.org)

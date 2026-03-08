@@ -1,0 +1,163 @@
+---
+title: "เริ่มต้นใช้งาน khaosuay"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{เริ่มต้นใช้งาน khaosuay}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## แนะนำแพ็กเกจ
+
+**khaosuay** เป็นแพ็กเกจ R สำหรับวิเคราะห์ข้อมูลเกษตรกรรม โดยใช้คำอุปมาจากการหุงข้าว ทำให้ workflow การวิเคราะห์แผนการทดลองเข้าใจง่ายและสนุกยิ่งขึ้น
+
+ขั้นตอนการวิเคราะห์ประกอบด้วย:
+
+| ฟังก์ชัน | ความหมาย | หน้าที่ |
+|---|---|---|
+| `wash_rice()` | ล้างข้าว | ทำความสะอาดข้อมูล |
+| `cook_rcbd()` | หุงข้าว RCBD | วิเคราะห์ ANOVA แบบ RCBD |
+| `top_with_sig()` | โรยหน้าด้วยสถิติ | ทดสอบความแตกต่างด้วย Duncan's test |
+| `serve_plate()` | จัดจานข้าวสวย | สร้างกราฟรายงาน |
+
+## ติดตั้ง
+
+```{r install, eval = FALSE}
+# ติดตั้งจาก GitHub
+# install.packages("pak")
+pak::pak("khaosuay")
+```
+
+## โหลดแพ็กเกจ
+
+```{r load}
+library(khaosuay)
+```
+
+---
+
+## ตัวอย่างการใช้งาน: ข้อมูลข้าว nitrogen
+
+ใช้ข้อมูล `gomez.nitrogen` จากแพ็กเกจ `agridat` ซึ่งเป็นการทดลองผลของปุ๋ยไนโตรเจนต่อผลผลิตข้าว
+
+### ขั้นที่ 1: เตรียมข้อมูล (ล้างข้าว)
+
+```{r step1, eval = FALSE}
+library(agridat)
+data(gomez.nitrogen)
+
+# ดูข้อมูลเบื้องต้น
+head(gomez.nitrogen)
+```
+
+```{r step1-fake, echo = FALSE}
+# จำลองข้อมูลสำหรับ vignette
+set.seed(42)
+gomez_sim <- data.frame(
+  rep   = factor(rep(1:4, each = 6)),
+  trt   = factor(rep(paste0("N", c(0, 30, 60, 90, 120, 150)), 4)),
+  nitro = c(
+    4.51, 5.02, 5.88, 5.98, 5.71, 5.74,
+    4.78, 5.49, 5.92, 6.13, 5.86, 5.79,
+    4.33, 5.17, 5.90, 5.95, 5.82, 5.62,
+    4.20, 5.05, 5.78, 6.02, 5.65, 5.68
+  )
+)
+head(gomez_sim)
+```
+
+ทำความสะอาดข้อมูลด้วย `wash_rice()`:
+
+```{r step1-wash, eval = FALSE}
+clean_data <- wash_rice(gomez.nitrogen)
+```
+
+```{r step1-wash-fake, echo = FALSE}
+clean_data <- wash_rice(gomez_sim)
+```
+
+### ขั้นที่ 2: วิเคราะห์ RCBD (หุงข้าว)
+
+```{r step2, eval = FALSE}
+model <- cook_rcbd(
+  data      = clean_data,
+  outcome   = "nitro",
+  treatment = "trt",
+  block     = "rep"
+)
+summary(model)
+```
+
+```{r step2-fake, echo = FALSE}
+model <- cook_rcbd(
+  data      = clean_data,
+  outcome   = "nitro",
+  treatment = "trt",
+  block     = "rep"
+)
+summary(model)
+```
+
+### ขั้นที่ 3: ทดสอบความแตกต่าง (โรยหน้า)
+
+```{r step3, eval = FALSE}
+sig_groups <- top_with_sig(model, "trt")
+print(sig_groups)
+```
+
+```{r step3-fake, echo = FALSE}
+sig_groups <- top_with_sig(model, "trt")
+print(sig_groups)
+```
+
+ตัวอักษรที่เหมือนกันหมายความว่าไม่แตกต่างกันทางสถิติที่ระดับนัยสำคัญ 0.05
+
+### ขั้นที่ 4: สร้างกราฟ (จัดจาน)
+
+```{r step4, eval = FALSE}
+setup_thai_font()
+
+mean_data <- aggregate(nitro ~ trt, data = clean_data, FUN = mean)
+
+serve_plate(
+  data  = mean_data,
+  x     = "trt",
+  y     = "nitro",
+  title = "ผลผลิตข้าวเฉลี่ยตามระดับปุ๋ยไนโตรเจน"
+)
+```
+
+---
+
+## สรุป Workflow
+
+```{r}
+library(khaosuay)
+library(agridat)
+
+data(gomez.nitrogen)
+
+gomez.nitrogen |>
+  wash_rice() |>
+  (\(d) cook_rcbd(d, "nitro", "trt", "rep"))() |>
+  top_with_sig("trt")
+```
+
+workflow นี้ประกอบด้วย 3 ขั้นตอนหลักต่อเนื่องกัน: ล้างข้อมูล → วิเคราะห์ RCBD → ทดสอบความแตกต่าง
+
+---
+
+## ดูเพิ่มเติม
+
+- `?wash_rice` — รายละเอียดการทำความสะอาดข้อมูล
+- `?cook_rcbd` — รายละเอียดการวิเคราะห์ RCBD
+- `?top_with_sig` — รายละเอียด Duncan's multiple range test
+- `?serve_plate` — รายละเอียดการสร้างกราฟ
+- `?setup_thai_font` — การตั้งค่าฟอนต์ภาษาไทย
