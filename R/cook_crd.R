@@ -1,13 +1,12 @@
-#' หุงข้าว RCBD — Randomized Complete Block Design
+#' หุงข้าว CRD — Completely Randomized Design
 #'
-#' วิเคราะห์สถิติแปลงทดลองแบบ RCBD รองรับ Single Factor และ Factorial in RCBD
+#' วิเคราะห์สถิติแปลงทดลองแบบ CRD รองรับทั้ง Single Factor และ Factorial
 #' รับผลจาก taste_rice() เพื่อเลือก Parametric / Non-parametric อัตโนมัติ
 #'
 #' @param data washed_rice object หรือ data.frame
 #' @param response character ชื่อ response variable (ระบุหลายตัวได้)
 #' @param treatment character ชื่อคอลัมน์ treatment (single factor)
-#' @param block character ชื่อคอลัมน์ block/rep (default = "rep")
-#' @param factors character vector ชื่อปัจจัย (สำหรับ factorial in RCBD)
+#' @param factors character vector ชื่อปัจจัย (สำหรับ factorial เช่น c("variety", "fertilizer"))
 #' @param tasted tasted_rice object จาก taste_rice() — ถ้ามีจะไม่เช็คซ้ำ
 #' @param posthoc character วิธี post-hoc: "tukey" (default), "lsd", "duncan"
 #' @param alpha numeric ระดับนัยสำคัญ (default = 0.05)
@@ -15,43 +14,38 @@
 #'
 #' @return object class "cooked_rice" (list) ประกอบด้วย:
 #'   \item{results}{list ผลวิเคราะห์แยกรายตัวแปร}
-#'   \item{design}{"RCBD"}
+#'   \item{design}{"CRD"}
 #'   \item{data}{data.frame ที่ใช้วิเคราะห์}
 #'   \item{settings}{list ค่าที่ตั้ง}
 #'
 #' @examples
-#' # Single factor RCBD
-#' washed <- wash_rice(my_data, design_check = TRUE)
-#' tasted <- taste_rice(washed, response = "yield", block = "rep")
-#' cooked <- cook_rcbd(washed, response = "yield", block = "rep",
-#'                     tasted = tasted)
+#' # Single factor
+#' washed <- wash_rice(my_data)
+#' tasted <- taste_rice(washed, response = "yield", mode = "model")
+#' cooked <- cook_crd(washed, response = "yield", tasted = tasted)
 #'
-#' # Factorial in RCBD
-#' cooked <- cook_rcbd(washed, response = "yield",
-#'                     factors = c("variety", "chemical"),
-#'                     block = "rep", tasted = tasted)
+#' # Factorial
+#' cooked <- cook_crd(washed, response = "yield",
+#'                    factors = c("variety", "fertilizer"),
+#'                    tasted = tasted)
 #'
 #' # ดูผล
 #' cooked$results$yield$summary_table
-#' cooked$results$yield$cv_percent
+#' cooked$results$yield$group_letters
 #'
 #' @export
-cook_rcbd <- function(data,
-                      response,
-                      treatment = "treatment",
-                      block     = "rep",
-                      factors   = NULL,
-                      tasted    = NULL,
-                      posthoc   = c("tukey", "lsd", "duncan"),
-                      alpha     = 0.05,
-                      verbose   = TRUE) {
+cook_crd <- function(data,
+                     response,
+                     treatment = "treatment",
+                     factors   = NULL,
+                     tasted    = NULL,
+                     posthoc   = c("tukey", "lsd", "duncan"),
+                     alpha     = 0.05,
+                     verbose   = TRUE) {
 
   .check_agricolae()
   posthoc <- match.arg(posthoc)
   df <- .extract_df(data)
-
-  # Block ต้องเป็น factor
-  if (!is.factor(df[[block]])) df[[block]] <- as.factor(df[[block]])
 
   # กำหนด factors
   is_factorial <- !is.null(factors) && length(factors) > 1
@@ -71,22 +65,20 @@ cook_rcbd <- function(data,
       next
     }
 
-    res <- list(response = resp, design = "RCBD")
+    res <- list(response = resp, design = "CRD")
 
-    # ── Formula (+ block) ──
+    # ── Formula ──
     if (is_factorial) {
-      fml <- reformulate(
-        c(paste(factors, collapse = " * "), block), response = resp
-      )
+      fml <- reformulate(paste(factors, collapse = " * "), response = resp)
       group_col <- ".interaction"
     } else {
-      fml <- reformulate(c(treatment, block), response = resp)
+      fml <- reformulate(treatment, response = resp)
       group_col <- treatment
     }
     res$formula <- deparse(fml)
 
     # ── Working data ──
-    needed <- c(resp, block, if (is_factorial) factors else treatment)
+    needed <- c(resp, if (is_factorial) factors else treatment)
     working_df <- df[complete.cases(df[, needed]), ]
     res$n <- nrow(working_df)
 
@@ -111,29 +103,35 @@ cook_rcbd <- function(data,
     # ══════════════════════════════════════════════════════════════
     if (analysis_path %in% c("parametric", "welch")) {
 
-      model <- aov(fml, data = working_df)
-      res$test_name <- "Fisher's ANOVA (RCBD)"
-
-      if (analysis_path == "welch") {
-        res$test_name <- paste0(res$test_name,
-          " [\u26A0\uFE0F variance ไม่เท่ากัน — ควร transform ข้อมูล]")
-      }
-
-      res$anova_table <- summary(model)
-      res$model <- model
-
-      # ดึง p-value
-      aov_s <- summary(model)[[1]]
-      if (is_factorial) {
-        all_terms <- trimws(rownames(aov_s))
-        keep <- all_terms != "Residuals" & all_terms != trimws(block)
-        res$p_values <- setNames(aov_s$`Pr(>F)`[keep], all_terms[keep])
-        res$p_value  <- min(res$p_values, na.rm = TRUE)
+      if (analysis_path == "welch" && !is_factorial) {
+        welch <- oneway.test(fml, data = working_df, var.equal = FALSE)
+        res$test_name   <- "Welch's ANOVA"
+        res$test_result <- welch
+        res$p_value     <- welch$p.value
+        model <- aov(fml, data = working_df)
+        res$anova_table <- summary(model)
+        res$model <- model
       } else {
-        res$p_value <- aov_s$`Pr(>F)`[1]
+        model <- aov(fml, data = working_df)
+        res$test_name   <- "Fisher's ANOVA (Type I)"
+        res$anova_table <- summary(model)
+        res$model       <- model
+
+        aov_s <- summary(model)[[1]]
+        if (is_factorial) {
+          n_terms <- nrow(aov_s) - 1
+          res$p_values <- setNames(
+            aov_s$`Pr(>F)`[seq_len(n_terms)],
+            trimws(rownames(aov_s)[seq_len(n_terms)])
+          )
+          res$p_value <- min(res$p_values, na.rm = TRUE)
+        } else {
+          res$p_value <- aov_s$`Pr(>F)`[1]
+        }
       }
 
       # CV%
+      aov_s    <- summary(model)[[1]]
       df_error <- aov_s$Df[nrow(aov_s)]
       ms_error <- aov_s$`Mean Sq`[nrow(aov_s)]
       res$cv_percent <- round(
@@ -176,31 +174,14 @@ cook_rcbd <- function(data,
     # ══════════════════════════════════════════════════════════════
     } else {
       kw_col <- if (is_factorial) ".interaction" else treatment
+      kw <- kruskal.test(reformulate(kw_col, response = resp),
+                         data = working_df)
+      res$test_name   <- "Kruskal-Wallis"
+      res$test_result <- kw
+      res$p_value     <- kw$p.value
+      res$cv_percent  <- NA
 
-      # Friedman (ถูกหลัก RCBD) → fallback Kruskal-Wallis
-      friedman_ok <- tryCatch({
-        ft <- friedman.test(
-          as.formula(paste(resp, "~", kw_col, "|", block)),
-          data = working_df
-        )
-        TRUE
-      }, error = function(e) FALSE)
-
-      if (friedman_ok) {
-        res$test_name   <- "Friedman's Test (non-parametric RCBD)"
-        res$test_result <- ft
-        res$p_value     <- ft$p.value
-      } else {
-        kw <- kruskal.test(reformulate(kw_col, response = resp),
-                           data = working_df)
-        res$test_name   <- "Kruskal-Wallis (fallback)"
-        res$test_result <- kw
-        res$p_value     <- kw$p.value
-      }
-      res$cv_percent <- NA
-
-      # POST-HOC
-      if (!is.na(res$p_value) && res$p_value < alpha) {
+      if (!is.na(kw$p.value) && kw$p.value < alpha) {
         res$posthoc_needed <- TRUE
         ph <- .run_posthoc_nonparametric(working_df[[resp]],
                                          working_df[[kw_col]], alpha)
@@ -221,13 +202,12 @@ cook_rcbd <- function(data,
     all_results[[resp]] <- res
   }
 
-  if (verbose) .print_cook_results(all_results, "RCBD", alpha)
+  if (verbose) .print_cook_results(all_results, "CRD", alpha)
 
   structure(
-    list(results = all_results, design = "RCBD", data = df,
+    list(results = all_results, design = "CRD", data = df,
          settings = list(response = response, treatment = treatment,
-                         block = block, factors = factors,
-                         posthoc = posthoc, alpha = alpha,
+                         factors = factors, posthoc = posthoc, alpha = alpha,
                          is_factorial = is_factorial,
                          tasted_provided = !is.null(tasted))),
     class = c("cooked_rice", "list")
