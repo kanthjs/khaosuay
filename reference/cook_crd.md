@@ -1,16 +1,15 @@
-# หุงข้าว RCBD — Randomized Complete Block Design
+# หุงข้าว CRD — Completely Randomized Design
 
-วิเคราะห์สถิติแปลงทดลองแบบ RCBD รองรับ Single Factor และ Factorial in RCBD
-รับผลจาก taste_rice() เพื่อเลือก Parametric / Non-parametric อัตโนมัติ
+วิเคราะห์สถิติแปลงทดลองแบบ CRD รองรับทั้ง Single Factor และ Factorial รับผลจาก
+taste_rice() เพื่อเลือก Parametric / Non-parametric อัตโนมัติ
 
 ## Usage
 
 ``` r
-cook_rcbd(
+cook_crd(
   data,
   response,
   treatment = "treatment",
-  block = "rep",
   factors = NULL,
   tasted = NULL,
   posthoc = c("tukey", "lsd", "duncan"),
@@ -33,13 +32,10 @@ cook_rcbd(
 
   character ชื่อคอลัมน์ treatment (single factor)
 
-- block:
-
-  character ชื่อคอลัมน์ block/rep (default = "rep")
-
 - factors:
 
-  character vector ชื่อปัจจัย (สำหรับ factorial in RCBD)
+  character vector ชื่อปัจจัย (สำหรับ factorial เช่น c("variety",
+  "fertilizer"))
 
 - tasted:
 
@@ -67,7 +63,7 @@ object class "cooked_rice" (list) ประกอบด้วย:
 
 - design:
 
-  "RCBD"
+  "CRD"
 
 - data:
 
@@ -81,19 +77,18 @@ object class "cooked_rice" (list) ประกอบด้วย:
 
 ``` r
 if (FALSE) { # \dontrun{
-# Single factor RCBD
-washed <- wash_rice(my_data, design_check = TRUE)
-tasted <- taste_rice(washed, response = "yield", block = "rep")
-cooked <- cook_rcbd(washed, response = "yield", block = "rep",
-                    tasted = tasted)
+# Single factor
+washed <- wash_rice(my_data)
+tasted <- taste_rice(washed, response = "yield", mode = "model")
+cooked <- cook_crd(washed, response = "yield", tasted = tasted)
 
-# Factorial in RCBD
-cooked <- cook_rcbd(washed, response = "yield",
-                    factors = c("variety", "chemical"),
-                    block = "rep", tasted = tasted)
+# Factorial
+cooked <- cook_crd(washed, response = "yield",
+                   factors = c("variety", "fertilizer"),
+                   tasted = tasted)
 
 # ดูผล
 cooked$results$yield$summary_table
-cooked$results$yield$cv_percent
+cooked$results$yield$group_letters
 } # }
 ```

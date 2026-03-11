@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>เริ่มต้นใช้งาน khaosuay • khaosuay</title>
+<title>เริ่มต้นใช้งาน khaosuay: การวิเคราะห์ข้อมูลเกษตรง่ายเหมือนหุงข้าว • khaosuay</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Mali-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/Fira_Code-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="เริ่มต้นใช้งาน khaosuay">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="เริ่มต้นใช้งาน khaosuay: การวิเคราะห์ข้อมูลเกษตรง่ายเหมือนหุงข้าว">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Mali:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
@@ -40,6 +40,10 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown--" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">บทความ</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown--">
 <li><a class="dropdown-item" href="../articles/getting-started.html">เริ่มต้นใช้งาน khaosuay</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><a class="dropdown-item" href="../articles/wash-and-taste.html">ซาวข้าวและชิมข้าว (wash + taste)</a></li>
+    <li><a class="dropdown-item" href="../articles/cooking-designs.html">หุงข้าว: CRD, RCBD, Split-plot</a></li>
+    <li><a class="dropdown-item" href="../articles/plotting-results.html">จัดจาน: สร้างกราฟ publication-ready</a></li>
   </ul>
 </li>
       </ul>
@@ -60,7 +64,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>เริ่มต้นใช้งาน khaosuay</h1>
+      <h1>เริ่มต้นใช้งาน khaosuay: การวิเคราะห์ข้อมูลเกษตรง่ายเหมือนหุงข้าว</h1>
             
       
 
@@ -70,180 +74,339 @@
     
     
 <div class="section level2">
-<h2 id="แนะนำแพกเกจ">แนะนำแพ็กเกจ<a class="anchor" aria-label="anchor" href="#%E0%B9%81%E0%B8%99%E0%B8%B0%E0%B8%99%E0%B8%B3%E0%B9%81%E0%B8%9E%E0%B8%81%E0%B9%80%E0%B8%81%E0%B8%88"></a>
+<h2 id="ภาพรวมของแพกเกจ-package-overview">ภาพรวมของแพ็กเกจ (Package Overview)<a class="anchor" aria-label="anchor" href="#%E0%B8%A0%E0%B8%B2%E0%B8%9E%E0%B8%A3%E0%B8%A7%E0%B8%A1%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B9%81%E0%B8%9E%E0%B8%81%E0%B9%80%E0%B8%81%E0%B8%88-package-overview"></a>
 </h2>
-<p><strong>khaosuay</strong> เป็นแพ็กเกจ R สำหรับวิเคราะห์ข้อมูลเกษตรกรรม
-โดยใช้คำอุปมาจากการหุงข้าว ทำให้ workflow
-การวิเคราะห์แผนการทดลองเข้าใจง่ายและสนุกยิ่งขึ้น</p>
-<p>ขั้นตอนการวิเคราะห์ประกอบด้วย:</p>
+<p><strong>khaosuay</strong> ("ข้าวสวย")
+นำเสนอแนวคิดการวิเคราะห์ข้อมูลทางเกษตรให้ง่ายเหมือนกับการ “หุงข้าว”
+โดยแบ่งการทำงานออกเป็น 4 ขั้นตอนหลัก:</p>
 <table class="table">
+<colgroup>
+<col width="25%">
+<col width="27%">
+<col width="25%">
+<col width="22%">
+</colgroup>
 <thead><tr class="header">
+<th>ขั้นตอน</th>
 <th>ฟังก์ชัน</th>
-<th>ความหมาย</th>
+<th>คำอุปมา</th>
 <th>หน้าที่</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
+<td>1</td>
 <td><code><a href="../reference/wash_rice.html">wash_rice()</a></code></td>
-<td>ล้างข้าว</td>
-<td>ทำความสะอาดข้อมูล</td>
+<td>ซาวข้าว</td>
+<td>ทำความสะอาดข้อมูล ตรวจ outlier แนะนำสิ่งที่ต้องแก้ไข</td>
 </tr>
 <tr class="even">
-<td><code><a href="../reference/cook_rcbd.html">cook_rcbd()</a></code></td>
-<td>หุงข้าว RCBD</td>
-<td>วิเคราะห์ ANOVA แบบ RCBD</td>
+<td>2</td>
+<td><code><a href="../reference/taste_rice.html">taste_rice()</a></code></td>
+<td>ชิมข้าว</td>
+<td>ตรวจ Assumptions (Normality, Equal Variance)</td>
 </tr>
 <tr class="odd">
-<td><code><a href="../reference/top_with_sig.html">top_with_sig()</a></code></td>
-<td>โรยหน้าด้วยสถิติ</td>
-<td>ทดสอบความแตกต่างด้วย Duncan’s test</td>
+<td>3</td>
+<td>
+<code><a href="../reference/cook_crd.html">cook_crd()</a></code> / <code><a href="../reference/cook_rcbd.html">cook_rcbd()</a></code> /
+<code><a href="../reference/cook_split.html">cook_split()</a></code>
+</td>
+<td>หุงข้าว</td>
+<td>วิเคราะห์สถิติตามแผนการทดลอง</td>
 </tr>
 <tr class="even">
-<td><code><a href="../reference/serve_plate.html">serve_plate()</a></code></td>
-<td>จัดจานข้าวสวย</td>
-<td>สร้างกราฟรายงาน</td>
+<td>4</td>
+<td><code><a href="../reference/plot_cooked.html">plot_cooked()</a></code></td>
+<td>จัดจาน</td>
+<td>สร้างกราฟพร้อมตีพิมพ์ (publication-ready)</td>
 </tr>
 </tbody>
 </table>
+<p>Workflow ของ khaosuay ออกแบบให้
+<strong>ฟังก์ชันแต่ละตัวส่งต่อผลลัพธ์ไปยังขั้นตอนถัดไปได้อัตโนมัติ</strong> เช่น
+<code><a href="../reference/wash_rice.html">wash_rice()</a></code> ส่งต่อไปยัง <code><a href="../reference/taste_rice.html">taste_rice()</a></code> แล้วส่งต่อไปยัง
+<code>cook_*()</code> จากนั้นก็ <code><a href="../reference/plot_cooked.html">plot_cooked()</a></code> ได้อย่างราบรื่น</p>
+<pre><code>wash_rice() --&gt; taste_rice() --&gt; cook_crd() / cook_rcbd() / cook_split() --&gt; plot_cooked()
+  (ซาวข้าว)      (ชิมข้าว)              (หุงข้าว)                           (จัดจาน)</code></pre>
+<hr>
 </div>
 <div class="section level2">
-<h2 id="ตดตง">ติดตั้ง<a class="anchor" aria-label="anchor" href="#%E0%B8%95%E0%B8%94%E0%B8%95%E0%B8%87"></a>
-</h2>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># ติดตั้งจาก GitHub</span></span>
-<span><span class="co"># install.packages("pak")</span></span>
-<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"khaosuay"</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="โหลดแพกเกจ">โหลดแพ็กเกจ<a class="anchor" aria-label="anchor" href="#%E0%B9%82%E0%B8%AB%E0%B8%A5%E0%B8%94%E0%B9%81%E0%B8%9E%E0%B8%81%E0%B9%80%E0%B8%81%E0%B8%88"></a>
+<h2 id="ตดตงแพกเกจ-installation">ติดตั้งแพ็กเกจ (Installation)<a class="anchor" aria-label="anchor" href="#%E0%B8%95%E0%B8%94%E0%B8%95%E0%B8%87%E0%B9%81%E0%B8%9E%E0%B8%81%E0%B9%80%E0%B8%81%E0%B8%88-installation"></a>
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">khaosuay</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># จาก GitHub</span></span>
+<span><span class="co"># install.packages("devtools")</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"kanthjs/KhaoSuay"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://kanthjs.github.io/KhaoSuay">khaosuay</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; khaosuay: สำหรับกราฟภาษาไทย เรียก setup_thai_font() ก่อนใช้ serve_plate()</span></span></code></pre></div>
 <hr>
 </div>
 <div class="section level2">
-<h2 id="ตวอยางการใชงาน-ขอมลขาว-nitrogen">ตัวอย่างการใช้งาน: ข้อมูลข้าว nitrogen<a class="anchor" aria-label="anchor" href="#%E0%B8%95%E0%B8%A7%E0%B8%AD%E0%B8%A2%E0%B8%B2%E0%B8%87%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%83%E0%B8%8A%E0%B8%87%E0%B8%B2%E0%B8%99-%E0%B8%82%E0%B8%AD%E0%B8%A1%E0%B8%A5%E0%B8%82%E0%B8%B2%E0%B8%A7-nitrogen"></a>
+<h2 id="ตวอยางแบบเตม-วเคราะห-crd-quick-start">ตัวอย่างแบบเต็ม: วิเคราะห์ CRD (Quick Start)<a class="anchor" aria-label="anchor" href="#%E0%B8%95%E0%B8%A7%E0%B8%AD%E0%B8%A2%E0%B8%B2%E0%B8%87%E0%B9%81%E0%B8%9A%E0%B8%9A%E0%B9%80%E0%B8%95%E0%B8%A1-%E0%B8%A7%E0%B9%80%E0%B8%84%E0%B8%A3%E0%B8%B2%E0%B8%B0%E0%B8%AB-crd-quick-start"></a>
 </h2>
-<p>ใช้ข้อมูล <code>gomez.nitrogen</code> จากแพ็กเกจ <code>agridat</code>
-ซึ่งเป็นการทดลองผลของปุ๋ยไนโตรเจนต่อผลผลิตข้าว</p>
+<p>สมมติเรามีข้อมูลผลผลิตข้าว 4 สายพันธุ์ ทดลองแบบ CRD 4 ซ้ำ:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># สร้างข้อมูลตัวอย่าง</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
+<span><span class="va">rice_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  variety <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"KDML105"</span>, <span class="st">"RD41"</span>, <span class="st">"RD57"</span>, <span class="st">"PTT1"</span><span class="op">)</span>, each <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>,</span>
+<span>  rep     <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, times <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>,</span>
+<span>  yield   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">4</span>, mean <span class="op">=</span> <span class="fl">650</span>, sd <span class="op">=</span> <span class="fl">30</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">4</span>, mean <span class="op">=</span> <span class="fl">580</span>, sd <span class="op">=</span> <span class="fl">25</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">4</span>, mean <span class="op">=</span> <span class="fl">710</span>, sd <span class="op">=</span> <span class="fl">35</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">4</span>, mean <span class="op">=</span> <span class="fl">620</span>, sd <span class="op">=</span> <span class="fl">28</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">rice_data</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   variety rep    yield</span></span>
+<span><span class="co">#&gt; 1 KDML105   1 633.1857</span></span>
+<span><span class="co">#&gt; 2 KDML105   2 643.0947</span></span>
+<span><span class="co">#&gt; 3 KDML105   3 696.7612</span></span>
+<span><span class="co">#&gt; 4 KDML105   4 652.1153</span></span>
+<span><span class="co">#&gt; 5    RD41   1 583.2322</span></span>
+<span><span class="co">#&gt; 6    RD41   2 622.8766</span></span></code></pre></div>
 <div class="section level3">
-<h3 id="ขนท-1-เตรยมขอมล-ลางขาว">ขั้นที่ 1: เตรียมข้อมูล (ล้างข้าว)<a class="anchor" aria-label="anchor" href="#%E0%B8%82%E0%B8%99%E0%B8%97-1-%E0%B9%80%E0%B8%95%E0%B8%A3%E0%B8%A2%E0%B8%A1%E0%B8%82%E0%B8%AD%E0%B8%A1%E0%B8%A5-%E0%B8%A5%E0%B8%B2%E0%B8%87%E0%B8%82%E0%B8%B2%E0%B8%A7"></a>
+<h3 id="ขนตอนท-1-wash_rice-ซาวขาว-ทำความสะอาดขอมล">ขั้นตอนที่ 1: <code>wash_rice()</code> — ซาวข้าว ทำความสะอาดข้อมูล<a class="anchor" aria-label="anchor" href="#%E0%B8%82%E0%B8%99%E0%B8%95%E0%B8%AD%E0%B8%99%E0%B8%97-1-wash_rice-%E0%B8%8B%E0%B8%B2%E0%B8%A7%E0%B8%82%E0%B8%B2%E0%B8%A7-%E0%B8%97%E0%B8%B3%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%AA%E0%B8%B0%E0%B8%AD%E0%B8%B2%E0%B8%94%E0%B8%82%E0%B8%AD%E0%B8%A1%E0%B8%A5"></a>
 </h3>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://kwstat.github.io/agridat/" class="external-link">agridat</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">gomez.nitrogen</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># ดูข้อมูลเบื้องต้น</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">gomez.nitrogen</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt;   rep  trt nitro</span></span>
-<span><span class="co">#&gt; 1   1   N0  4.51</span></span>
-<span><span class="co">#&gt; 2   1  N30  5.02</span></span>
-<span><span class="co">#&gt; 3   1  N60  5.88</span></span>
-<span><span class="co">#&gt; 4   1  N90  5.98</span></span>
-<span><span class="co">#&gt; 5   1 N120  5.71</span></span>
-<span><span class="co">#&gt; 6   1 N150  5.74</span></span></code></pre>
-<p>ทำความสะอาดข้อมูลด้วย <code><a href="../reference/wash_rice.html">wash_rice()</a></code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">clean_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wash_rice.html">wash_rice</a></span><span class="op">(</span><span class="va">gomez.nitrogen</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt; ทำความสะอาดเมล็ดข้าวเรียบร้อย: ลบข้อมูลที่ไม่สมบูรณ์ออกแล้ว</span></span></code></pre>
+<code class="sourceCode R"><span><span class="va">washed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wash_rice.html">wash_rice</a></span><span class="op">(</span></span>
+<span>  data          <span class="op">=</span> <span class="va">rice_data</span>,</span>
+<span>  treatment_col <span class="op">=</span> <span class="st">"variety"</span>,</span>
+<span>  rep_col       <span class="op">=</span> <span class="st">"rep"</span>,</span>
+<span>  design_check  <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; [MAP]   คอลัมน์กรรมวิธี: 'variety' (ไม่เปลี่ยนชื่อ)</span></span>
+<span><span class="co">#&gt; [MAP]   คอลัมน์ซ้ำ: 'rep' (ไม่เปลี่ยนชื่อ)</span></span>
+<span><span class="co">#&gt; [INFO]  แปลงเป็น Factor: rep</span></span>
+<span><span class="co">#&gt; Warning in wash_rice(data = rice_data, treatment_col = "variety", rep_col = "rep", : [WARN] ไม่สามารถเช็คแผนการทดลองได้ — ไม่พบคอลัมน์: treatment</span></span>
+<span><span class="co">#&gt;   ลองระบุผ่าน treatment_col / rep_col</span></span>
+<span><span class="co">#&gt;   หรือเพิ่มใน custom_aliases</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; --------------------------------------------------</span></span>
+<span><span class="co">#&gt; wash_rice v3.1 — สรุปผลการล้างข้าว</span></span>
+<span><span class="co">#&gt; --------------------------------------------------</span></span>
+<span><span class="co">#&gt;   • แถว:        16 -&gt; 16</span></span>
+<span><span class="co">#&gt;   • คอลัมน์:    3</span></span>
+<span><span class="co">#&gt;   • Factor:     rep</span></span>
+<span><span class="co">#&gt;   • Numeric:    yield</span></span>
+<span><span class="co">#&gt; --------------------------------------------------</span></span>
+<span><span class="co">#&gt; ล้างข้าวเสร็จเรียบร้อย! ข้อมูลพร้อมหุงแล้ว</span></span>
+<span><span class="co">#&gt; --------------------------------------------------</span></span></code></pre></div>
+<p>ดูผลการซาวข้าว:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">washed</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ── washed_rice v3.1 ──</span></span>
+<span><span class="co">#&gt;   Rows: 16 | Cols: 3 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   $data       → clean data.frame</span></span>
+<span><span class="co">#&gt;   $report     → cleaning details</span></span>
+<span><span class="co">#&gt;   $flagged    → problematic rows</span></span>
+<span><span class="co">#&gt;   $column_map → name mapping</span></span></code></pre></div>
+<p>ข้อมูลที่สะอาดแล้วอยู่ใน <code>washed$data</code>
+และสามารถดูรายละเอียดเพิ่มเติมได้ที่ <code>washed$report</code> (สรุปผลทุกขั้นตอน)
+และ <code>washed$flagged</code> (แถวที่ถูก flag)</p>
 </div>
 <div class="section level3">
-<h3 id="ขนท-2-วเคราะห-rcbd-หงขาว">ขั้นที่ 2: วิเคราะห์ RCBD (หุงข้าว)<a class="anchor" aria-label="anchor" href="#%E0%B8%82%E0%B8%99%E0%B8%97-2-%E0%B8%A7%E0%B9%80%E0%B8%84%E0%B8%A3%E0%B8%B2%E0%B8%B0%E0%B8%AB-rcbd-%E0%B8%AB%E0%B8%87%E0%B8%82%E0%B8%B2%E0%B8%A7"></a>
+<h3 id="ขนตอนท-2-taste_rice-ชมขาว-เชคขอมลกอนหง">ขั้นตอนที่ 2: <code>taste_rice()</code> — ชิมข้าว เช็คข้อมูลก่อนหุง<a class="anchor" aria-label="anchor" href="#%E0%B8%82%E0%B8%99%E0%B8%95%E0%B8%AD%E0%B8%99%E0%B8%97-2-taste_rice-%E0%B8%8A%E0%B8%A1%E0%B8%82%E0%B8%B2%E0%B8%A7-%E0%B9%80%E0%B8%8A%E0%B8%84%E0%B8%82%E0%B8%AD%E0%B8%A1%E0%B8%A5%E0%B8%81%E0%B8%AD%E0%B8%99%E0%B8%AB%E0%B8%87"></a>
 </h3>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cook_rcbd.html">cook_rcbd</a></span><span class="op">(</span></span>
-<span>  data      <span class="op">=</span> <span class="va">clean_data</span>,</span>
-<span>  outcome   <span class="op">=</span> <span class="st">"nitro"</span>,</span>
-<span>  treatment <span class="op">=</span> <span class="st">"trt"</span>,</span>
-<span>  block     <span class="op">=</span> <span class="st">"rep"</span></span>
+<code class="sourceCode R"><span><span class="va">tasted</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/taste_rice.html">taste_rice</a></span><span class="op">(</span></span>
+<span>  data      <span class="op">=</span> <span class="va">washed</span>,</span>
+<span>  response  <span class="op">=</span> <span class="st">"yield"</span>,</span>
+<span>  treatment <span class="op">=</span> <span class="st">"variety"</span>,</span>
+<span>  mode      <span class="op">=</span> <span class="st">"both"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt; --- หุงข้าว RCBD เสร็จแล้ว! กำลังตรวจสอบความนุ่มของข้อมูล ---</span></span>
-<span><span class="co">#&gt;             Df Sum Sq Mean Sq F value   Pr(&gt;F)    </span></span>
-<span><span class="co">#&gt; trt          5  6.843  1.3686 120.643 1.45e-11 ***</span></span>
-<span><span class="co">#&gt; rep          3  0.232  0.0775   6.831  0.00402 ** </span></span>
-<span><span class="co">#&gt; Residuals   15  0.170  0.0113                     </span></span>
-<span><span class="co">#&gt; ---</span></span>
-<span><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span></code></pre>
-</div>
-<div class="section level3">
-<h3 id="ขนท-3-ทดสอบความแตกตาง-โรยหนา">ขั้นที่ 3: ทดสอบความแตกต่าง (โรยหน้า)<a class="anchor" aria-label="anchor" href="#%E0%B8%82%E0%B8%99%E0%B8%97-3-%E0%B8%97%E0%B8%94%E0%B8%AA%E0%B8%AD%E0%B8%9A%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B9%81%E0%B8%95%E0%B8%81%E0%B8%95%E0%B8%B2%E0%B8%87-%E0%B9%82%E0%B8%A3%E0%B8%A2%E0%B8%AB%E0%B8%99%E0%B8%B2"></a>
-</h3>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sig_groups</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/top_with_sig.html">top_with_sig</a></span><span class="op">(</span><span class="va">model</span>, <span class="st">"trt"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">sig_groups</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt; --- โรยหน้าเรียบร้อย! กลุ่มที่ตัวอักษรเหมือนกันแปลว่าไม่ต่างกันทางสถิติ ---</span></span>
-<span><span class="co">#&gt;       nitro groups</span></span>
-<span><span class="co">#&gt; N90  6.0200      a</span></span>
-<span><span class="co">#&gt; N60  5.8700     ab</span></span>
-<span><span class="co">#&gt; N120 5.7600      b</span></span>
-<span><span class="co">#&gt; N150 5.7075      b</span></span>
-<span><span class="co">#&gt; N30  5.1825      c</span></span>
-<span><span class="co">#&gt; N0   4.4550      d</span></span></code></pre>
-<p>ตัวอักษรที่เหมือนกันหมายความว่าไม่แตกต่างกันทางสถิติที่ระดับนัยสำคัญ 0.05</p>
-</div>
-<div class="section level3">
-<h3 id="ขนท-4-สรางกราฟ-จดจาน">ขั้นที่ 4: สร้างกราฟ (จัดจาน)<a class="anchor" aria-label="anchor" href="#%E0%B8%82%E0%B8%99%E0%B8%97-4-%E0%B8%AA%E0%B8%A3%E0%B8%B2%E0%B8%87%E0%B8%81%E0%B8%A3%E0%B8%B2%E0%B8%9F-%E0%B8%88%E0%B8%94%E0%B8%88%E0%B8%B2%E0%B8%99"></a>
-</h3>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/setup_thai_font.html">setup_thai_font</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">mean_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html" class="external-link">aggregate</a></span><span class="op">(</span><span class="va">nitro</span> <span class="op">~</span> <span class="va">trt</span>, data <span class="op">=</span> <span class="va">clean_data</span>, FUN <span class="op">=</span> <span class="va">mean</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/serve_plate.html">serve_plate</a></span><span class="op">(</span></span>
-<span>  data  <span class="op">=</span> <span class="va">mean_data</span>,</span>
-<span>  x     <span class="op">=</span> <span class="st">"trt"</span>,</span>
-<span>  y     <span class="op">=</span> <span class="st">"nitro"</span>,</span>
-<span>  title <span class="op">=</span> <span class="st">"ผลผลิตข้าวเฉลี่ยตามระดับปุ๋ยไนโตรเจน"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<hr>
-</div>
-</div>
-<div class="section level2">
-<h2 id="สรป-workflow">สรุป Workflow<a class="anchor" aria-label="anchor" href="#%E0%B8%AA%E0%B8%A3%E0%B8%9B-workflow"></a>
-</h2>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">khaosuay</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://kwstat.github.io/agridat/" class="external-link">agridat</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">gomez.nitrogen</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">gomez.nitrogen</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/wash_rice.html">wash_rice</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="op">(</span>\<span class="op">(</span><span class="va">d</span><span class="op">)</span> <span class="fu"><a href="../reference/cook_rcbd.html">cook_rcbd</a></span><span class="op">(</span><span class="va">d</span>, <span class="st">"nitro"</span>, <span class="st">"trt"</span>, <span class="st">"rep"</span><span class="op">)</span><span class="op">)</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/top_with_sig.html">top_with_sig</a></span><span class="op">(</span><span class="st">"trt"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; ทำความสะอาดเมล็ดข้าวเรียบร้อย: ลบข้อมูลที่ไม่สมบูรณ์ออกแล้ว</span></span>
-<span><span class="co">#&gt; --- หุงข้าว RCBD เสร็จแล้ว! กำลังตรวจสอบความนุ่มของข้อมูล ---</span></span>
-<span><span class="co">#&gt; --- โรยหน้าเรียบร้อย! กลุ่มที่ตัวอักษรเหมือนกันแปลว่าไม่ต่างกันทางสถิติ ---</span></span>
-<span><span class="co">#&gt;       nitro groups</span></span>
-<span><span class="co">#&gt; T7 2.400833      a</span></span>
-<span><span class="co">#&gt; T3 2.379167      a</span></span>
-<span><span class="co">#&gt; T8 2.275000      a</span></span>
-<span><span class="co">#&gt; T4 2.272500      a</span></span>
-<span><span class="co">#&gt; T2 2.253333      a</span></span>
-<span><span class="co">#&gt; T6 2.190833      a</span></span>
-<span><span class="co">#&gt; T5 2.113333      a</span></span>
-<span><span class="co">#&gt; T1 2.041667      a</span></span></code></pre></div>
-<p>workflow นี้ประกอบด้วย 3 ขั้นตอนหลักต่อเนื่องกัน: ล้างข้อมูล → วิเคราะห์ RCBD →
-ทดสอบความแตกต่าง</p>
-<hr>
-</div>
-<div class="section level2">
-<h2 id="ดเพมเตม">ดูเพิ่มเติม<a class="anchor" aria-label="anchor" href="#%E0%B8%94%E0%B9%80%E0%B8%9E%E0%B8%A1%E0%B9%80%E0%B8%95%E0%B8%A1"></a>
-</h2>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">tasted</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ── tasted_rice v2.0 ──</span></span>
+<span><span class="co">#&gt;   Design: Single Factor </span></span>
+<span><span class="co">#&gt;   Mode: both </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  response final_class             recommendation                  </span></span>
+<span><span class="co">#&gt;  yield    Normal + Equal Variance ✅ ใช้ Fisher's ANOVA → Tukey HSD</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   yield [4 กลุ่ม]: ✅ ใช้ Fisher's ANOVA → Tukey HSD</span></span></code></pre></div>
+<p>ฟังก์ชันจะบอกชัดเจนว่าข้อมูลชุดนี้:</p>
 <ul>
 <li>
-<code><a href="../reference/wash_rice.html">?wash_rice</a></code> — รายละเอียดการทำความสะอาดข้อมูล</li>
+<strong>Normal + Equal Variance</strong> → ใช้ ANOVA (Parametric)
+ได้</li>
 <li>
-<code><a href="../reference/cook_rcbd.html">?cook_rcbd</a></code> — รายละเอียดการวิเคราะห์ RCBD</li>
+<strong>Normal + Unequal Variance</strong> → ใช้ Welch’s ANOVA</li>
 <li>
-<code><a href="../reference/top_with_sig.html">?top_with_sig</a></code> — รายละเอียด Duncan’s multiple range
+<strong>Non-normal</strong> → ใช้ Kruskal-Wallis
+(Non-parametric)</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="ขนตอนท-3-cook_crd-หงขาว-วเคราะหสถต">ขั้นตอนที่ 3: <code>cook_crd()</code> — หุงข้าว วิเคราะห์สถิติ<a class="anchor" aria-label="anchor" href="#%E0%B8%82%E0%B8%99%E0%B8%95%E0%B8%AD%E0%B8%99%E0%B8%97-3-cook_crd-%E0%B8%AB%E0%B8%87%E0%B8%82%E0%B8%B2%E0%B8%A7-%E0%B8%A7%E0%B9%80%E0%B8%84%E0%B8%A3%E0%B8%B2%E0%B8%B0%E0%B8%AB%E0%B8%AA%E0%B8%96%E0%B8%95"></a>
+</h3>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cooked</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cook_crd.html">cook_crd</a></span><span class="op">(</span></span>
+<span>  data      <span class="op">=</span> <span class="va">washed</span>,</span>
+<span>  response  <span class="op">=</span> <span class="st">"yield"</span>,</span>
+<span>  treatment <span class="op">=</span> <span class="st">"variety"</span>,</span>
+<span>  tasted    <span class="op">=</span> <span class="va">tasted</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; 🌾🌾🌾🌾🌾🌾🌾🌾🌾🌾🌾🌾🌾🌾🌾🌾🌾🌾🌾🌾🌾🌾🌾🌾🌾</span></span>
+<span><span class="co">#&gt; 🍚  cook_crd v1.1 — ผลการหุงข้าว (CRD)</span></span>
+<span><span class="co">#&gt; ────────────────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt; ────────────────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt; 🌾 yield (n=16)</span></span>
+<span><span class="co">#&gt;   Formula:     yield ~ variety</span></span>
+<span><span class="co">#&gt;   Assumption:  Normal + Equal Variance  [✅ จาก taste_rice (ไม่เช็คซ้ำ)]</span></span>
+<span><span class="co">#&gt;   Test:        Fisher's ANOVA (Type I)</span></span>
+<span><span class="co">#&gt;   p-value:     0.0004106 ***</span></span>
+<span><span class="co">#&gt;   CV%:         4.51%</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   📊 Post-Hoc: Tukey's HSD</span></span>
+<span><span class="co">#&gt;   ---------------------------------------------</span></span>
+<span><span class="co">#&gt;     KDML105  mean=  656.29 ± 28.07  [ab]</span></span>
+<span><span class="co">#&gt;     PTT1     mean=  632.20 ± 27.60  [bc]</span></span>
+<span><span class="co">#&gt;     RD41     mean=  586.50 ± 30.62  [c]</span></span>
+<span><span class="co">#&gt;     RD57     mean=  713.95 ± 30.29  [a]</span></span>
+<span><span class="co">#&gt; ────────────────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt; 📋 $results$&lt;var&gt;$summary_table → ตารางพร้อมตีพิมพ์</span></span>
+<span><span class="co">#&gt;    $results$&lt;var&gt;$group_letters → กลุ่มอักษร (a, b, c)</span></span>
+<span><span class="co">#&gt;    $results$&lt;var&gt;$anova_table   → ANOVA table</span></span>
+<span><span class="co">#&gt;    $results$&lt;var&gt;$model         → aov object</span></span>
+<span><span class="co">#&gt; 🌾🌾🌾🌾🌾🌾🌾🌾🌾🌾🌾🌾🌾🌾🌾🌾🌾🌾🌾🌾🌾🌾🌾🌾🌾</span></span></code></pre></div>
+<p>ดูตาราง Summary:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cooked</span><span class="op">$</span><span class="va">results</span><span class="op">$</span><span class="va">yield</span><span class="op">$</span><span class="va">summary_table</span></span>
+<span><span class="co">#&gt;   treatment n   mean    sd    se    min    max group mean_group</span></span>
+<span><span class="co">#&gt; 1   KDML105 4 656.29 28.07 14.03 633.19 696.76    ab  656.29 ab</span></span>
+<span><span class="co">#&gt; 2      PTT1 4 632.20 27.60 13.80 604.44 670.03    bc  632.20 bc</span></span>
+<span><span class="co">#&gt; 3      RD41 4 586.50 30.62 15.31 548.37 622.88     c   586.50 c</span></span>
+<span><span class="co">#&gt; 4      RD57 4 713.95 30.29 15.15 685.96 752.84     a   713.95 a</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="ขนตอนท-4-plot_cooked-จดจาน-สรางกราฟ">ขั้นตอนที่ 4: <code>plot_cooked()</code> — จัดจาน สร้างกราฟ<a class="anchor" aria-label="anchor" href="#%E0%B8%82%E0%B8%99%E0%B8%95%E0%B8%AD%E0%B8%99%E0%B8%97-4-plot_cooked-%E0%B8%88%E0%B8%94%E0%B8%88%E0%B8%B2%E0%B8%99-%E0%B8%AA%E0%B8%A3%E0%B8%B2%E0%B8%87%E0%B8%81%E0%B8%A3%E0%B8%B2%E0%B8%9F"></a>
+</h3>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_cooked.html">plot_cooked</a></span><span class="op">(</span></span>
+<span>  cooked       <span class="op">=</span> <span class="va">cooked</span>,</span>
+<span>  response     <span class="op">=</span> <span class="st">"yield"</span>,</span>
+<span>  y_label      <span class="op">=</span> <span class="st">"Yield (kg/rai)"</span>,</span>
+<span>  x_label      <span class="op">=</span> <span class="st">"Rice Variety"</span>,</span>
+<span>  show_letters <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><img src="getting-started_files/figure-html/unnamed-chunk-10-1.png" class="r-plt" alt="" width="672"></p>
+<hr>
+</div>
+</div>
+<div class="section level2">
+<h2 id="สงทแตละฟงกชนทำใหอตโนมต">สิ่งที่แต่ละฟังก์ชันทำให้อัตโนมัติ<a class="anchor" aria-label="anchor" href="#%E0%B8%AA%E0%B8%87%E0%B8%97%E0%B9%81%E0%B8%95%E0%B8%A5%E0%B8%B0%E0%B8%9F%E0%B8%87%E0%B8%81%E0%B8%8A%E0%B8%99%E0%B8%97%E0%B8%B3%E0%B9%83%E0%B8%AB%E0%B8%AD%E0%B8%95%E0%B9%82%E0%B8%99%E0%B8%A1%E0%B8%95"></a>
+</h2>
+<div class="section level3">
+<h3 id="wash_rice-ซาวขาว">
+<code>wash_rice()</code> ซาวข้าว<a class="anchor" aria-label="anchor" href="#wash_rice-%E0%B8%8B%E0%B8%B2%E0%B8%A7%E0%B8%82%E0%B8%B2%E0%B8%A7"></a>
+</h3>
+<ul>
+<li>ปรับชื่อคอลัมน์ให้เป็นมาตรฐาน (lowercase, ลบช่องว่างส่วนเกิน)</li>
+<li>
+<strong>Smart Alias Dictionary</strong> จับคู่ชื่อคอลัมน์ภาษาไทย/อังกฤษ เช่น
+“สายพันธุ์” → treatment</li>
+<li>แปลง empty string → NA</li>
+<li>แปลงคอลัมน์ที่ควรเป็นตัวเลข (character → numeric)</li>
+<li>แปลงคอลัมน์ที่ควรเป็น factor อัตโนมัติ</li>
+<li>ตรวจจับ outlier (IQR หรือ z-score)</li>
+<li>ตรวจจับค่าติดลบ ค่าซ้ำ ค่านอกพิสัย</li>
+<li>ตรวจสอบความสมดุลของแผนการทดลอง
+(<code>design_check = TRUE</code>)</li>
+<li>ตรวจสอบพิกัด GPS (ถ้ามี)</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="taste_rice-ชมขาว">
+<code>taste_rice()</code> ชิมข้าว<a class="anchor" aria-label="anchor" href="#taste_rice-%E0%B8%8A%E0%B8%A1%E0%B8%82%E0%B8%B2%E0%B8%A7"></a>
+</h3>
+<ul>
+<li>ทดสอบ Normality ด้วย Shapiro-Wilk test</li>
+<li>ทดสอบ Homogeneity of Variance ด้วย Brown-Forsythe (Levene’s)
 test</li>
+<li>รองรับ 3 โหมด: <code>"quick"</code> (raw data), <code>"model"</code>
+(residuals), <code>"both"</code>
+</li>
+<li>รองรับ Single Factor และ Factorial design</li>
+<li>แสดง Diagnostic plots (QQ plot, Boxplot, Residuals vs Fitted)</li>
+<li>สรุปผลเป็นคำแนะนำที่ชัดเจน</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="cook_crd-cook_rcbd-cook_split">
+<code>cook_crd()</code> / <code>cook_rcbd()</code> /
+<code>cook_split()</code><a class="anchor" aria-label="anchor" href="#cook_crd-cook_rcbd-cook_split"></a>
+</h3>
+<ul>
+<li>เลือก Parametric หรือ Non-parametric อัตโนมัติจาก
+<code><a href="../reference/taste_rice.html">taste_rice()</a></code>
+</li>
 <li>
-<code><a href="../reference/serve_plate.html">?serve_plate</a></code> — รายละเอียดการสร้างกราฟ</li>
+<strong>Parametric</strong>: Fisher’s ANOVA → Post-hoc (Tukey / LSD
+/ Duncan)</li>
 <li>
-<code><a href="../reference/setup_thai_font.html">?setup_thai_font</a></code> — การตั้งค่าฟอนต์ภาษาไทย</li>
+<strong>Non-parametric</strong>: Kruskal-Wallis → Dunn’s test</li>
+<li>คำนวณ CV%, MSE, Summary table พร้อม group letters (a, b, c)</li>
+<li>
+<code><a href="../reference/cook_split.html">cook_split()</a></code> แยก error term ถูกต้องตาม main-plot /
+sub-plot</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="plot_cooked-จดจาน">
+<code>plot_cooked()</code> จัดจาน<a class="anchor" aria-label="anchor" href="#plot_cooked-%E0%B8%88%E0%B8%94%E0%B8%88%E0%B8%B2%E0%B8%99"></a>
+</h3>
+<ul>
+<li>เลือก Bar graph หรือ Boxplot อัตโนมัติตามจำนวนซ้ำ</li>
+<li>ใส่ตัวอักษรทางสถิติ (a, b, c) อัตโนมัติ</li>
+<li>รองรับ Colorblind-friendly palette (viridis, grey, set2)</li>
+<li>สไตล์ Publication-ready (พื้นขาว ไม่มี gridlines)</li>
+<li>บันทึกเป็นไฟล์ได้ (<code>save_path</code>)</li>
+</ul>
+<hr>
+</div>
+</div>
+<div class="section level2">
+<h2 id="แผนการทดลองทรองรบ">แผนการทดลองที่รองรับ<a class="anchor" aria-label="anchor" href="#%E0%B9%81%E0%B8%9C%E0%B8%99%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%97%E0%B8%94%E0%B8%A5%E0%B8%AD%E0%B8%87%E0%B8%97%E0%B8%A3%E0%B8%AD%E0%B8%87%E0%B8%A3%E0%B8%9A"></a>
+</h2>
+<table class="table">
+<thead><tr class="header">
+<th>แผนการทดลอง</th>
+<th>ฟังก์ชัน</th>
+<th>ลักษณะ</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>CRD</td>
+<td><code><a href="../reference/cook_crd.html">cook_crd()</a></code></td>
+<td>Single factor หรือ Factorial</td>
+</tr>
+<tr class="even">
+<td>RCBD</td>
+<td><code><a href="../reference/cook_rcbd.html">cook_rcbd()</a></code></td>
+<td>Single factor หรือ Factorial in RCBD</td>
+</tr>
+<tr class="odd">
+<td>Split-plot</td>
+<td><code><a href="../reference/cook_split.html">cook_split()</a></code></td>
+<td>Main-plot + Sub-plot + Block</td>
+</tr>
+</tbody>
+</table>
+<p>ดูรายละเอียดและตัวอย่างเพิ่มเติมได้ที่:</p>
+<ul>
+<li>
+<a href="wash-and-taste.html">การซาวข้าวและชิมข้าว</a> —
+<code><a href="../reference/wash_rice.html">wash_rice()</a></code> + <code><a href="../reference/taste_rice.html">taste_rice()</a></code> อย่างละเอียด</li>
+<li>
+<a href="cooking-designs.html">การหุงข้าว: CRD, RCBD, Split-plot</a> —
+เปรียบเทียบทั้ง 3 แผนการทดลอง</li>
+<li>
+<a href="plotting-results.html">การจัดจาน: สร้างกราฟสวยงาม</a> —
+ปรับแต่ง <code><a href="../reference/plot_cooked.html">plot_cooked()</a></code> แบบต่าง ๆ</li>
 </ul>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -253,7 +416,7 @@ test</li>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Kanthanawit.</p>
+  <p>Developed by Kanthanawit Jaisong.</p>
 </div>
 
 <div class="pkgdown-footer-right">

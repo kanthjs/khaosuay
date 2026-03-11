@@ -13,9 +13,9 @@
 <link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="khaosuay — วิเคราะห์ข้อมูลเกษตรกรรมแบบสนุก">
-<meta name="description" content="แพ็กเกจ R สำหรับวิเคราะห์แผนการทดลองเกษตรกรรมด้วย workflow ที่ใช้คำอุปมาจากการหุงข้าว
+<meta name="description" content="แพ็กเกจ R สำหรับวิเคราะห์แผนการทดลองเกษตรกรรมด้วย workflow ที่ใช้คำอุปมาจากการหุงข้าว: ซาวข้าว ชิมข้าว หุงข้าว จัดจาน
 ">
-<meta property="og:description" content="แพ็กเกจ R สำหรับวิเคราะห์แผนการทดลองเกษตรกรรมด้วย workflow ที่ใช้คำอุปมาจากการหุงข้าว
+<meta property="og:description" content="แพ็กเกจ R สำหรับวิเคราะห์แผนการทดลองเกษตรกรรมด้วย workflow ที่ใช้คำอุปมาจากการหุงข้าว: ซาวข้าว ชิมข้าว หุงข้าว จัดจาน
 ">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -44,6 +44,10 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown--" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">บทความ</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown--">
 <li><a class="dropdown-item" href="articles/getting-started.html">เริ่มต้นใช้งาน khaosuay</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><a class="dropdown-item" href="articles/wash-and-taste.html">ซาวข้าวและชิมข้าว (wash + taste)</a></li>
+    <li><a class="dropdown-item" href="articles/cooking-designs.html">หุงข้าว: CRD, RCBD, Split-plot</a></li>
+    <li><a class="dropdown-item" href="articles/plotting-results.html">จัดจาน: สร้างกราฟ publication-ready</a></li>
   </ul>
 </li>
       </ul>
@@ -66,150 +70,169 @@
 </blockquote>
 <hr>
 <div class="section level2">
-<h2 id="ทำไมต้อง-khaosuay">ทำไมต้อง khaosuay?<a class="anchor" aria-label="anchor" href="#%E0%B8%97%E0%B8%B3%E0%B9%84%E0%B8%A1%E0%B8%95%E0%B9%89%E0%B8%AD%E0%B8%87-khaosuay"></a>
+<h2 id="ทำไมต้อง-khaosuay-ข้าวสวย">ทำไมต้อง khaosuay (ข้าวสวย)?<a class="anchor" aria-label="anchor" href="#%E0%B8%97%E0%B8%B3%E0%B9%84%E0%B8%A1%E0%B8%95%E0%B9%89%E0%B8%AD%E0%B8%87-khaosuay-%E0%B8%82%E0%B9%89%E0%B8%B2%E0%B8%A7%E0%B8%AA%E0%B8%A7%E0%B8%A2"></a>
 </h2>
-<p>การวิเคราะห์สถิติทางการเกษตร (เช่น RCBD, Split-plot) มักมีความยุ่งยากในการเตรียมข้อมูลและการสร้างกราฟเพื่อเขียนรายงาน <code>khaosuay</code> จึงเกิดขึ้นมาเพื่อ:</p>
+<p>การวิเคราะห์สถิติทางการเกษตร (เช่น RCBD, Split-plot) มักมีความยุ่งยากในการเตรียมข้อมูล ตรวจสอบข้อตกลงเบื้องต้นทางสถิติ (Assumptions) และการสร้างกราฟเพื่อเขียนรายงาน <code>khaosuay</code> จึงเกิดขึ้นมาเพื่อ:</p>
 <ul>
 <li>
-<strong>ลดขั้นตอนที่ซับซ้อน</strong> — เปลี่ยน syntax ยากๆ ให้เป็นฟังก์ชันที่เข้าใจง่ายในคอนเซปต์การ “หุงข้าว”</li>
+<strong>ลดขั้นตอนที่ซับซ้อน</strong> — เปลี่ยน syntax ยาก ๆ ให้เป็นฟังก์ชันที่เข้าใจง่ายในคอนเซปต์การ “หุงข้าว”</li>
 <li>
-<strong>รองรับภาษาไทย</strong> — แก้ไขปัญหา font ภาษาไทยในกราฟที่นักวิจัยไทยมักเจอ</li>
+<strong>ทำงานต่อเนื่อง (Pipeline)</strong> — ส่งต่อข้อมูลจากขั้นตอนทำความสะอาด ไปทดสอบสถิติ ไปวิเคราะห์ เเละไปวาดกราฟ ได้อย่างลื่นไหล</li>
 <li>
-<strong>พร้อมทำรายงาน</strong> — สร้างตาราง ANOVA และกราฟเปรียบเทียบค่าเฉลี่ยที่ใส่ตัวอักษร (a, b, c) โดยอัตโนมัติ</li>
+<strong>รองรับภาษาไทย</strong> — แก้ไขปัญหาการอ่านชื่อคอลัมน์ภาษาไทยแบบอัตโนมัติ</li>
 </ul>
 <hr>
 </div>
 <div class="section level2">
 <h2 id="การติดตั้ง">การติดตั้ง<a class="anchor" aria-label="anchor" href="#%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%95%E0%B8%B4%E0%B8%94%E0%B8%95%E0%B8%B1%E0%B9%89%E0%B8%87"></a>
 </h2>
+<p>ติดตั้งเวอร์ชันล่าสุดจาก GitHub โดยใช้แพ็กเกจ <code>devtools</code> หรือ <code>pak</code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
-<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"kanthjs/khaosuay"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># ผ่าน devtools</span></span>
+<span><span class="co"># install.packages("devtools")</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"kanthjs/KhaoSuay"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># หรือผ่าน pak</span></span>
+<span><span class="co"># install.packages("pak")</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"kanthjs/KhaoSuay"</span><span class="op">)</span></span></code></pre></div>
 <hr>
 </div>
 <div class="section level2">
-<h2 id="ขั้นตอนการใช้งาน-the-cooking-workflow">ขั้นตอนการใช้งาน (The Cooking Workflow)<a class="anchor" aria-label="anchor" href="#%E0%B8%82%E0%B8%B1%E0%B9%89%E0%B8%99%E0%B8%95%E0%B8%AD%E0%B8%99%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B8%87%E0%B8%B2%E0%B8%99-the-cooking-workflow"></a>
+<h2 id="workflow-การหุงข้าว-4-ขั้นตอน">Workflow การหุงข้าว 4 ขั้นตอน<a class="anchor" aria-label="anchor" href="#workflow-%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%AB%E0%B8%B8%E0%B8%87%E0%B8%82%E0%B9%89%E0%B8%B2%E0%B8%A7-4-%E0%B8%82%E0%B8%B1%E0%B9%89%E0%B8%99%E0%B8%95%E0%B8%AD%E0%B8%99"></a>
 </h2>
-<p>การใช้ <code>khaosuay</code> ง่ายเหมือนการหุงข้าวหนึ่งหม้อ แบ่งเป็น 4 ขั้นตอน:</p>
-<div class="section level3">
-<h3 id="id_1-ล้างข้าว--เตรียมข้อมูล">1. ล้างข้าว — เตรียมข้อมูล<a class="anchor" aria-label="anchor" href="#id_1-%E0%B8%A5%E0%B9%89%E0%B8%B2%E0%B8%87%E0%B8%82%E0%B9%89%E0%B8%B2%E0%B8%A7--%E0%B9%80%E0%B8%95%E0%B8%A3%E0%B8%B5%E0%B8%A2%E0%B8%A1%E0%B8%82%E0%B9%89%E0%B8%AD%E0%B8%A1%E0%B8%B9%E0%B8%A5"></a>
-</h3>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">khaosuay</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">clean_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/wash_rice.html">wash_rice</a></span><span class="op">(</span><span class="va">my_agri_data</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="id_2-หุงข้าว--วิเคราะห์แผนการทดลอง-rcbd">2. หุงข้าว — วิเคราะห์แผนการทดลอง RCBD<a class="anchor" aria-label="anchor" href="#id_2-%E0%B8%AB%E0%B8%B8%E0%B8%87%E0%B8%82%E0%B9%89%E0%B8%B2%E0%B8%A7--%E0%B8%A7%E0%B8%B4%E0%B9%80%E0%B8%84%E0%B8%A3%E0%B8%B2%E0%B8%B0%E0%B8%AB%E0%B9%8C%E0%B9%81%E0%B8%9C%E0%B8%99%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%97%E0%B8%94%E0%B8%A5%E0%B8%AD%E0%B8%87-rcbd"></a>
-</h3>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cook_rcbd.html">cook_rcbd</a></span><span class="op">(</span></span>
-<span>  data      <span class="op">=</span> <span class="va">clean_data</span>,</span>
-<span>  outcome   <span class="op">=</span> <span class="st">"yield"</span>,</span>
-<span>  treatment <span class="op">=</span> <span class="st">"variety"</span>,</span>
-<span>  block     <span class="op">=</span> <span class="st">"rep"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="id_3-โรยหน้า--ทดสอบความแตกต่างทางสถิติ">3. โรยหน้า — ทดสอบความแตกต่างทางสถิติ<a class="anchor" aria-label="anchor" href="#id_3-%E0%B9%82%E0%B8%A3%E0%B8%A2%E0%B8%AB%E0%B8%99%E0%B9%89%E0%B8%B2--%E0%B8%97%E0%B8%94%E0%B8%AA%E0%B8%AD%E0%B8%9A%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B9%81%E0%B8%95%E0%B8%81%E0%B8%95%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B8%97%E0%B8%B2%E0%B8%87%E0%B8%AA%E0%B8%96%E0%B8%B4%E0%B8%95%E0%B8%B4"></a>
-</h3>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/top_with_sig.html">top_with_sig</a></span><span class="op">(</span><span class="va">model</span>, treatment <span class="op">=</span> <span class="st">"variety"</span><span class="op">)</span></span></code></pre></div>
-<p>ตัวอักษรที่เหมือนกัน (a, b, c) หมายความว่าไม่แตกต่างกันทางสถิติที่ระดับนัยสำคัญ 0.05</p>
-</div>
-<div class="section level3">
-<h3 id="id_4-จัดจาน--สร้างกราฟรายงาน">4. จัดจาน — สร้างกราฟรายงาน<a class="anchor" aria-label="anchor" href="#id_4-%E0%B8%88%E0%B8%B1%E0%B8%94%E0%B8%88%E0%B8%B2%E0%B8%99--%E0%B8%AA%E0%B8%A3%E0%B9%89%E0%B8%B2%E0%B8%87%E0%B8%81%E0%B8%A3%E0%B8%B2%E0%B8%9F%E0%B8%A3%E0%B8%B2%E0%B8%A2%E0%B8%87%E0%B8%B2%E0%B8%99"></a>
-</h3>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/setup_thai_font.html">setup_thai_font</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="reference/serve_plate.html">serve_plate</a></span><span class="op">(</span></span>
-<span>  data  <span class="op">=</span> <span class="va">results</span>,</span>
-<span>  x     <span class="op">=</span> <span class="st">"variety"</span>,</span>
-<span>  y     <span class="op">=</span> <span class="st">"yield"</span>,</span>
-<span>  title <span class="op">=</span> <span class="st">"เปรียบเทียบผลผลิตข้าวแต่ละสายพันธุ์"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<hr>
-</div>
-</div>
-<div class="section level2">
-<h2 id="ตัวอย่างจากข้อมูลจริง">ตัวอย่างจากข้อมูลจริง<a class="anchor" aria-label="anchor" href="#%E0%B8%95%E0%B8%B1%E0%B8%A7%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B8%88%E0%B8%B2%E0%B8%81%E0%B8%82%E0%B9%89%E0%B8%AD%E0%B8%A1%E0%B8%B9%E0%B8%A5%E0%B8%88%E0%B8%A3%E0%B8%B4%E0%B8%87"></a>
-</h2>
-<p>ใช้ข้อมูล <code>gomez.nitrogen</code> จากแพ็กเกจ <code>agridat</code> (ผลของปุ๋ยไนโตรเจนต่อผลผลิตข้าว):</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">khaosuay</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://kwstat.github.io/agridat/" class="external-link">agridat</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">gomez.nitrogen</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># ครบ workflow ใน 3 บรรทัด</span></span>
-<span><span class="va">clean</span>  <span class="op">&lt;-</span> <span class="fu"><a href="reference/wash_rice.html">wash_rice</a></span><span class="op">(</span><span class="va">gomez.nitrogen</span><span class="op">)</span></span>
-<span><span class="va">model</span>  <span class="op">&lt;-</span> <span class="fu"><a href="reference/cook_rcbd.html">cook_rcbd</a></span><span class="op">(</span><span class="va">clean</span>, <span class="st">"nitro"</span>, <span class="st">"trt"</span>, <span class="st">"rep"</span><span class="op">)</span></span>
-<span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/top_with_sig.html">top_with_sig</a></span><span class="op">(</span><span class="va">model</span>, <span class="st">"trt"</span><span class="op">)</span></span></code></pre></div>
-<p>ผลลัพธ์ตัวอย่าง:</p>
+<p>การใช้ <code>khaosuay</code> ง่ายเหมือนการหุงข้าวหนึ่งหม้อ โดยแบ่งเป็น 4 ขั้นตอนหลัก:</p>
 <table class="table">
+<colgroup>
+<col width="25%">
+<col width="27%">
+<col width="25%">
+<col width="22%">
+</colgroup>
 <thead><tr class="header">
-<th align="center">Treatment (Nitro)</th>
-<th align="center">Mean Yield</th>
-<th align="center">Significance</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="center">140</td>
-<td align="center">5,235</td>
-<td align="center">a</td>
-</tr>
-<tr class="even">
-<td align="center">110</td>
-<td align="center">4,892</td>
-<td align="center">ab</td>
-</tr>
-<tr class="odd">
-<td align="center">…</td>
-<td align="center">…</td>
-<td align="center">…</td>
-</tr>
-</tbody>
-</table>
-<hr>
-</div>
-<div class="section level2">
-<h2 id="ฟังก์ชันทั้งหมด">ฟังก์ชันทั้งหมด<a class="anchor" aria-label="anchor" href="#%E0%B8%9F%E0%B8%B1%E0%B8%87%E0%B8%81%E0%B9%8C%E0%B8%8A%E0%B8%B1%E0%B8%99%E0%B8%97%E0%B8%B1%E0%B9%89%E0%B8%87%E0%B8%AB%E0%B8%A1%E0%B8%94"></a>
-</h2>
-<table class="table">
-<thead><tr class="header">
+<th>ขั้นตอน</th>
 <th>ฟังก์ชัน</th>
-<th>ความหมาย</th>
+<th>คำอุปมา</th>
 <th>หน้าที่</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
+<td>1</td>
 <td><code><a href="reference/wash_rice.html">wash_rice()</a></code></td>
-<td>ล้างข้าว</td>
-<td>ลบแถวที่มี NA ออกจากข้อมูล</td>
+<td>ซาวข้าว</td>
+<td>ทำความสะอาดข้อมูล ตรวจ outlier และแปลงชนิดตัวแปร</td>
 </tr>
 <tr class="even">
-<td><code><a href="reference/cook_rcbd.html">cook_rcbd()</a></code></td>
-<td>หุงข้าว RCBD</td>
-<td>วิเคราะห์ ANOVA แบบ RCBD</td>
+<td>2</td>
+<td><code><a href="reference/taste_rice.html">taste_rice()</a></code></td>
+<td>ชิมข้าว</td>
+<td>ตรวจ Assumptions (Normality, Equal Variance)</td>
 </tr>
 <tr class="odd">
-<td><code><a href="reference/top_with_sig.html">top_with_sig()</a></code></td>
-<td>โรยหน้าด้วยสถิติ</td>
-<td>Duncan’s multiple range test</td>
+<td>3</td>
+<td>
+<code><a href="reference/cook_crd.html">cook_crd()</a></code> / <code><a href="reference/cook_rcbd.html">cook_rcbd()</a></code> / <code><a href="reference/cook_split.html">cook_split()</a></code>
+</td>
+<td>หุงข้าว</td>
+<td>วิเคราะห์สถิติตามแผนการทดลอง เลือกระบบ Parametric/Non-parametric อัตโนมัติ</td>
 </tr>
 <tr class="even">
-<td><code><a href="reference/serve_plate.html">serve_plate()</a></code></td>
-<td>จัดจานข้าวสวย</td>
-<td>สร้าง bar chart รายงาน</td>
-</tr>
-<tr class="odd">
-<td><code><a href="reference/setup_thai_font.html">setup_thai_font()</a></code></td>
-<td>ตั้งค่าฟอนต์</td>
-<td>โหลด font Sarabun สำหรับกราฟภาษาไทย</td>
+<td>4</td>
+<td><code><a href="reference/plot_cooked.html">plot_cooked()</a></code></td>
+<td>จัดจาน</td>
+<td>สร้างกราฟสรุปผลพร้อมตัวอักษรทางสถิติ (a, b, c) แบบ publication-ready</td>
 </tr>
 </tbody>
 </table>
+<hr>
+</div>
+<div class="section level2">
+<h2 id="ตัวอย่างการใช้งานด่วน-quick-start">ตัวอย่างการใช้งานด่วน (Quick Start)<a class="anchor" aria-label="anchor" href="#%E0%B8%95%E0%B8%B1%E0%B8%A7%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B8%87%E0%B8%B2%E0%B8%99%E0%B8%94%E0%B9%88%E0%B8%A7%E0%B8%99-quick-start"></a>
+</h2>
+<p>สมมติว่าคุณมีข้อมูลผลผลิตข้าว (<code>yield</code>) จากการทดลองแบบ CRD ที่มี 4 สิ่งทดลอง (<code>variety</code>):</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://kanthjs.github.io/KhaoSuay">khaosuay</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># 1. ซาวข้าว (ทำความสะอาดข้อมูล)</span></span>
+<span><span class="va">washed</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/wash_rice.html">wash_rice</a></span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="va">my_data</span>, </span>
+<span>  treatment_col <span class="op">=</span> <span class="st">"variety"</span>, </span>
+<span>  rep_col <span class="op">=</span> <span class="st">"rep"</span>,</span>
+<span>  design_check <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># 2. ชิมข้าว (ตรวจสอบสถิติพื้นฐาน Normality &amp; Variance)</span></span>
+<span><span class="va">tasted</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/taste_rice.html">taste_rice</a></span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="va">washed</span>,</span>
+<span>  response <span class="op">=</span> <span class="st">"yield"</span>,</span>
+<span>  treatment <span class="op">=</span> <span class="st">"variety"</span>,</span>
+<span>  mode <span class="op">=</span> <span class="st">"both"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># 3. หุงข้าว (วิเคราะห์ ANOVA หรือ Kruskal-Wallis อัตโนมัติจากผลการชิม)</span></span>
+<span><span class="va">cooked</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cook_crd.html">cook_crd</a></span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="va">washed</span>,</span>
+<span>  response <span class="op">=</span> <span class="st">"yield"</span>,</span>
+<span>  treatment <span class="op">=</span> <span class="st">"variety"</span>,</span>
+<span>  tasted <span class="op">=</span> <span class="va">tasted</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># 4. จัดจาน (วาดกราฟแท่งหรือ Boxplot พร้อมตัวอักษร)</span></span>
+<span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/plot_cooked.html">plot_cooked</a></span><span class="op">(</span></span>
+<span>  cooked <span class="op">=</span> <span class="va">cooked</span>,</span>
+<span>  response <span class="op">=</span> <span class="st">"yield"</span>,</span>
+<span>  y_label <span class="op">=</span> <span class="st">"Yield (kg/rai)"</span>,</span>
+<span>  x_label <span class="op">=</span> <span class="st">"Rice Variety"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<hr>
+</div>
+<div class="section level2">
+<h2 id="สรุปความสามารถหลักของฟังก์ชัน">สรุปความสามารถหลักของฟังก์ชัน<a class="anchor" aria-label="anchor" href="#%E0%B8%AA%E0%B8%A3%E0%B8%B8%E0%B8%9B%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%AA%E0%B8%B2%E0%B8%A1%E0%B8%B2%E0%B8%A3%E0%B8%96%E0%B8%AB%E0%B8%A5%E0%B8%B1%E0%B8%81%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%9F%E0%B8%B1%E0%B8%87%E0%B8%81%E0%B9%8C%E0%B8%8A%E0%B8%B1%E0%B8%99"></a>
+</h2>
+<div class="section level3">
+<h3 id="id_1-wash_rice--การซาวข้าว">1. <code>wash_rice()</code> — การซาวข้าว<a class="anchor" aria-label="anchor" href="#id_1-wash_rice--%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%8B%E0%B8%B2%E0%B8%A7%E0%B8%82%E0%B9%89%E0%B8%B2%E0%B8%A7"></a>
+</h3>
+<ul>
+<li>
+<strong>Smart Alias:</strong> ค้นหาคอลัมน์ “ซ้ำ”, “สายพันธุ์”, “Treatment” ภาษาไทยและอังกฤษอัตโนมัติ</li>
+<li>
+<strong>Outlier Detection:</strong> ตรวจหาค่าที่ผิดปกติด้วย IQR หรือ Z-score</li>
+<li>
+<strong>Domain Range:</strong> เตือนเมื่อพบค่าที่อยู่นอกเหนือช่วงที่เป็นไปได้จริง (เช่น เปอร์เซ็นต์ความรุนแรงโรคไม่ควรเกิน 100)</li>
+<li>
+<strong>Design Check:</strong> ตรวจสอบความสมดุล (Balance) ของแผนการทดลอง</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="id_2-taste_rice--การชิมข้าว">2. <code>taste_rice()</code> — การชิมข้าว<a class="anchor" aria-label="anchor" href="#id_2-taste_rice--%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%8A%E0%B8%B4%E0%B8%A1%E0%B8%82%E0%B9%89%E0%B8%B2%E0%B8%A7"></a>
+</h3>
+<ul>
+<li>ตรวจสอบ Normality ด้วย <strong>Shapiro-Wilk test</strong>
+</li>
+<li>ตรวจสอบ Equal Variance ด้วย <strong>Levene’s test (Brown-Forsythe)</strong>
+</li>
+<li>สรุปผลเป็นคำแนะนำว่าควรใช้ Parametric (เช่น ANOVA) หรือ Non-parametric (เช่น Kruskal-Wallis)</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="id_3-cook_--การหุงข้าว">3. <code>cook_*()</code> — การหุงข้าว<a class="anchor" aria-label="anchor" href="#id_3-cook_--%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%AB%E0%B8%B8%E0%B8%87%E0%B8%82%E0%B9%89%E0%B8%B2%E0%B8%A7"></a>
+</h3>
+<p>มีหม้อหุงข้าว 3 แบบรองรับงานวิจัย ได้แก่ <code><a href="reference/cook_crd.html">cook_crd()</a></code>, <code><a href="reference/cook_rcbd.html">cook_rcbd()</a></code>, และ <code><a href="reference/cook_split.html">cook_split()</a></code> - เปลี่ยนผ่านพฤติกรรมระหว่าง Parametric และ Non-parametric ได้อัตโนมัติจากคำแนะนำของ <code><a href="reference/taste_rice.html">taste_rice()</a></code> - มีผลลัพธ์เป็นตาราง Summary สถิติที่หาค่า Mean, SD, SE, CV% พร้อมจัดกลุ่มตัวอักษร Post-hoc (เช่น Tukey HSD หรือ Dunn’s test) เสร็จสรรพ</p>
+</div>
+<div class="section level3">
+<h3 id="id_4-plot_cooked--การจัดจาน">4. <code>plot_cooked()</code> — การจัดจาน<a class="anchor" aria-label="anchor" href="#id_4-plot_cooked--%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%88%E0%B8%B1%E0%B8%94%E0%B8%88%E0%B8%B2%E0%B8%99"></a>
+</h3>
+<ul>
+<li>ประเมินจำนวนซ้ำ (n) ของคุณอัตโนมัติ: ดึง Bar graph มาใช้หาก n น้อย และใช้ Boxplot หาก n เริ่มกว้าง</li>
+<li>จัดวางตัวอักษรทางสถิติ (Statistical Letters) ให้อัตโนมัติเหนือกราฟ</li>
+<li>โทนสีกราฟรองรับตามมาตรฐาน Colorblind-friendly (viridis, grey, set2)</li>
+</ul>
+<hr>
+</div>
+</div>
+<div class="section level2">
+<h2 id="เอกสารอ้างอิงและคู่มือ-documentation">เอกสารอ้างอิงและคู่มือ (Documentation)<a class="anchor" aria-label="anchor" href="#%E0%B9%80%E0%B8%AD%E0%B8%81%E0%B8%AA%E0%B8%B2%E0%B8%A3%E0%B8%AD%E0%B9%89%E0%B8%B2%E0%B8%87%E0%B8%AD%E0%B8%B4%E0%B8%87%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%84%E0%B8%B9%E0%B9%88%E0%B8%A1%E0%B8%B7%E0%B8%AD-documentation"></a>
+</h2>
+<p>สามารถอ่านคู่มือฉบับเต็มและรายละเอียดเพิ่มเติมของการวิเคราะห์แต่ละแผนการทดลองได้ที่หน้าเว็บไซต์ Pkgdown (อยู่ระหว่างการพัฒนา) หรือพิมพ์ <code><a href="reference/wash_rice.html">?wash_rice</a></code>, <code><a href="reference/taste_rice.html">?taste_rice</a></code>, <code><a href="reference/cook_rcbd.html">?cook_rcbd</a></code> ใน R Console.</p>
 <hr>
 </div>
 <div class="section level2">
@@ -226,7 +249,9 @@
   </main><aside class="col-md-3"><div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li>What license is it under?</li>
+<li>
+<a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
+</li>
 </ul>
 </div>
 
@@ -241,7 +266,7 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Kanthanawit <br><small class="roles"> Author, maintainer </small>   </li>
+<li>Kanthanawit Jaisong <br><small class="roles"> Author, maintainer </small>   </li>
 </ul>
 </div>
 
@@ -252,7 +277,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Kanthanawit.</p>
+  <p>Developed by Kanthanawit Jaisong.</p>
 </div>
 
 <div class="pkgdown-footer-right">
