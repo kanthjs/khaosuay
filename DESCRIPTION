@@ -14,6 +14,7 @@ Description: Tools for cleaning, analyzing, and visualizing agricultural
     experimental data (RCBD) and survey data. Provides smart column mapping
     (Thai/English), data quality checks, outlier detection, ANOVA with
     Duncan's multiple range test, and Thai-language plot support.
+URL: https://kanthjs.github.io/KhaoSuay
 License: MIT + file LICENSE
 Encoding: UTF-8
 Imports:

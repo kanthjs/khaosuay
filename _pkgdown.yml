@@ -46,6 +46,11 @@ navbar:
           href: articles/plotting-results.html
 
 reference:
+  - title: "แพ็กเกจ (Package Overview)"
+    desc: ภาพรวมของแพ็กเกจ khaosuay และวิธีใช้งานเบื้องต้น
+    contents:
+      - khaosuay-package
+
   - title: "ขั้นตอนที่ 1: ซาวข้าว (Data Cleaning)"
     desc: >
       ทำความสะอาดข้อมูล ตรวจ outlier ตรวจแผนการทดลอง
