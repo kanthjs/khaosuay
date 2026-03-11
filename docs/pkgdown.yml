@@ -1,0 +1,12 @@
+pandoc: 3.6.3
+pkgdown: 2.2.0
+pkgdown_sha: ~
+articles:
+  cooking-designs: cooking-designs.html
+  getting-started: getting-started.html
+  plotting-results: plotting-results.html
+  wash-and-taste: wash-and-taste.html
+last_built: 2026-03-11T10:33Z
+urls:
+  reference: https://kanthjs.github.io/KhaoSuay/reference
+  article: https://kanthjs.github.io/KhaoSuay/articles
