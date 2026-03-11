@@ -18,7 +18,7 @@ home:
   title: "khaosuay — วิเคราะห์ข้อมูลเกษตรกรรมแบบสนุก"
   description: >
     แพ็กเกจ R สำหรับวิเคราะห์แผนการทดลองเกษตรกรรมด้วย workflow
-    ที่ใช้คำอุปมาจากการหุงข้าว
+    ที่ใช้คำอุปมาจากการหุงข้าว: ซาวข้าว ชิมข้าว หุงข้าว จัดจาน
 
 navbar:
   bg: primary
@@ -37,35 +37,59 @@ navbar:
       menu:
         - text: "เริ่มต้นใช้งาน khaosuay"
           href: articles/getting-started.html
+        - text: "---"
+        - text: "ซาวข้าวและชิมข้าว (wash + taste)"
+          href: articles/wash-and-taste.html
+        - text: "หุงข้าว: CRD, RCBD, Split-plot"
+          href: articles/cooking-designs.html
+        - text: "จัดจาน: สร้างกราฟ publication-ready"
+          href: articles/plotting-results.html
 
 reference:
-  - title: "การเตรียมข้อมูล"
-    desc: "ทำความสะอาดข้อมูลก่อนวิเคราะห์"
+  - title: "ขั้นตอนที่ 1: ซาวข้าว (Data Cleaning)"
+    desc: >
+      ทำความสะอาดข้อมูล ตรวจ outlier ตรวจแผนการทดลอง
+      แนะนำสิ่งที่ต้องพิจารณาก่อนวิเคราะห์
     contents:
       - wash_rice
 
-  - title: "การวิเคราะห์แผนการทดลอง"
-    desc: "วิเคราะห์ ANOVA สำหรับแผนการทดลอง RCBD"
+  - title: "ขั้นตอนที่ 2: ชิมข้าว (Assumption Check)"
+    desc: >
+      ตรวจสอบ Normality และ Equal Variance
+      เพื่อเลือกสถิติที่ถูกต้อง (Parametric / Non-parametric)
     contents:
+      - taste_rice
+
+  - title: "ขั้นตอนที่ 3: หุงข้าว (Statistical Analysis)"
+    desc: >
+      วิเคราะห์สถิติตามแผนการทดลอง เลือก ANOVA หรือ
+      Kruskal-Wallis อัตโนมัติ พร้อม Post-hoc
+    contents:
+      - cook_crd
       - cook_rcbd
+      - cook_split
 
-  - title: "การทดสอบความแตกต่าง"
-    desc: "ทดสอบความแตกต่างระหว่างกรรมวิธีด้วย Duncan's test"
+  - title: "ขั้นตอนที่ 4: จัดจาน (Visualization)"
+    desc: >
+      สร้างกราฟ publication-ready พร้อมตัวอักษรทางสถิติ (a, b, c)
+      รองรับ Bar graph และ Boxplot
     contents:
-      - top_with_sig
+      - plot_cooked
 
-  - title: "การสร้างกราฟ"
-    desc: "แสดงผลการทดลองในรูปแบบกราฟ"
+articles:
+  - title: "เริ่มต้นใช้งาน"
+    navbar: ~
     contents:
-      - serve_plate
+      - getting-started
 
-  - title: "การตั้งค่า"
-    desc: "ตั้งค่าฟอนต์และสภาพแวดล้อม"
+  - title: "คู่มือการใช้งานแต่ละขั้นตอน"
+    desc: "รายละเอียดการใช้งานแต่ละฟังก์ชันอย่างละเอียด"
     contents:
-      - setup_thai_font
+      - wash-and-taste
+      - cooking-designs
+      - plotting-results
 
 footer:
   structure:
     left: developed_by
     right: built_with
-

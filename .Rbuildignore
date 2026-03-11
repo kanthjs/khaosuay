@@ -3,6 +3,10 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^SKILL\.md$
+^\.SKILL\.md$
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^\.github$
+^doc$
+^Meta$

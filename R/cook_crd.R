@@ -19,6 +19,7 @@
 #'   \item{settings}{list ค่าที่ตั้ง}
 #'
 #' @examples
+#' \dontrun{
 #' # Single factor
 #' washed <- wash_rice(my_data)
 #' tasted <- taste_rice(washed, response = "yield", mode = "model")
@@ -32,7 +33,7 @@
 #' # ดูผล
 #' cooked$results$yield$summary_table
 #' cooked$results$yield$group_letters
-#'
+#' }
 #' @export
 cook_crd <- function(data,
                      response,
@@ -61,7 +62,7 @@ cook_crd <- function(data,
 
   for (resp in response) {
     if (!is.numeric(df[[resp]])) {
-      warning("'", resp, "' ไม่ใช่ตัวเลข — ข้าม")
+      warning("'", resp, "' \u0e44\u0e21\u0e48\u0e43\u0e0a\u0e48\u0e15\u0e31\u0e27\u0e40\u0e25\u0e02 \u2014 \u0e02\u0e49\u0e32\u0e21")
       next
     }
 

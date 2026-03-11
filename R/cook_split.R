@@ -35,6 +35,7 @@
 #'   interaction        -> sub-plot error (Residuals)
 #'
 #' @examples
+#' \dontrun{
 #' washed <- wash_rice(my_data)
 #' cooked <- cook_split(washed,
 #'   response  = "yield",
@@ -45,7 +46,7 @@
 #' cooked$results$yield$anova_table
 #' cooked$results$yield$posthoc_main
 #' cooked$results$yield$posthoc_sub
-#'
+#' }
 #' @export
 cook_split <- function(data,
                        response,
@@ -64,7 +65,7 @@ cook_split <- function(data,
   # Factor conversion
   for (col in c(main_plot, sub_plot, block)) {
     if (!col %in% names(df))
-      stop("\U0001F6AB ไม่พบคอลัมน์ '", col, "'")
+      stop("\U0001F6AB \u0e44\u0e21\u0e48\u0e1e\u0e1a\u0e04\u0e2d\u0e25\u0e31\u0e21\u0e19\u0e4c '", col, "'")
     if (!is.factor(df[[col]])) df[[col]] <- as.factor(df[[col]])
   }
 
@@ -74,7 +75,7 @@ cook_split <- function(data,
 
   for (resp in response) {
     if (!is.numeric(df[[resp]])) {
-      warning("'", resp, "' ไม่ใช่ตัวเลข — ข้าม")
+      warning("'", resp, "' \u0e44\u0e21\u0e48\u0e43\u0e0a\u0e48\u0e15\u0e31\u0e27\u0e40\u0e25\u0e02 \u2014 \u0e02\u0e49\u0e32\u0e21")
       next
     }
 
@@ -122,7 +123,7 @@ cook_split <- function(data,
       res$test_name <- "Split-plot ANOVA"
       if (analysis_path == "welch") {
         res$test_name <- paste0(res$test_name,
-          " [\u26A0\uFE0F variance ไม่เท่ากัน — ควร transform]")
+          " [\u26A0\uFE0F variance \u0e44\u0e21\u0e48\u0e40\u0e17\u0e48\u0e32\u0e01\u0e31\u0e19 \u2014 \u0e04\u0e27\u0e23 transform]")
       }
 
       # Fit split-plot
@@ -154,7 +155,7 @@ cook_split <- function(data,
         df_mp <- aov_flat$Df[mp_idx]
         ms_mp <- aov_flat$`Mean Sq`[mp_idx]
       } else {
-        warning("\u26A0\uFE0F ไม่พบ main-plot error — ใช้ Residuals แทน")
+        warning("\u26A0\uFE0F \u0e44\u0e21\u0e48\u0e1e\u0e1a main-plot error \u2014 \u0e43\u0e0a\u0e49 Residuals \u0e41\u0e17\u0e19")
         df_mp <- aov_flat$Df[nrow(aov_flat)]
         ms_mp <- aov_flat$`Mean Sq`[nrow(aov_flat)]
       }
@@ -236,7 +237,7 @@ cook_split <- function(data,
             tukey  = "Tukey's HSD",
             lsd    = "Fisher's LSD (Bonferroni)",
             duncan = "Duncan's MRT"
-          ), " (แยกตาม error term)")
+          ), " (\u0e41\u0e22\u0e01\u0e15\u0e32\u0e21 error term)")
       }
 
       # group_letters
@@ -343,7 +344,7 @@ cook_split <- function(data,
                                   block, alpha) {
 
   message("\n", strrep("\U0001F33E", 25))
-  message("\U0001F35A  cook_split v1.0 — ผลการหุงข้าว (Split-plot)")
+  message("\U0001F35A  cook_split v1.0 \u2014 \u0e1c\u0e25\u0e01\u0e32\u0e23\u0e2b\u0e38\u0e07\u0e02\u0e49\u0e32\u0e27 (Split-plot)")
   message(strrep("\u2500", 60))
   message("  Main-plot:  ", main_plot)
   message("  Sub-plot:   ", sub_plot)
@@ -358,7 +359,7 @@ cook_split <- function(data,
 
     src <- res$assumption$source
     src_label <- if (src == "taste_rice") {
-      "\u2705 จาก taste_rice"
+      "\u2705 \u0e08\u0e32\u0e01 taste_rice"
     } else {
       "\U0001F50D auto_check"
     }
@@ -390,7 +391,7 @@ cook_split <- function(data,
       prefix <- if (dimmed) "  \U0001F4CC" else "  \U0001F4CA"
       message("\n", prefix, " Post-Hoc [", label, "]: ", ph$name)
       if (dimmed) {
-        message("     \u26A0\uFE0F (อ้างอิงเท่านั้น — Interaction มีนัยสำคัญ ดูตารางจับคู่ผสมเป็นหลัก)")
+        message("     \u26A0\uFE0F (\u0e2d\u0e49\u0e32\u0e07\u0e2d\u0e34\u0e07\u0e40\u0e17\u0e48\u0e32\u0e19\u0e31\u0e49\u0e19 \u2014 Interaction \u0e21\u0e35\u0e19\u0e31\u0e22\u0e2a\u0e33\u0e04\u0e31\u0e0d \u0e14\u0e39\u0e15\u0e32\u0e23\u0e32\u0e07\u0e08\u0e31\u0e1a\u0e04\u0e39\u0e48\u0e1c\u0e2a\u0e21\u0e40\u0e1b\u0e47\u0e19\u0e2b\u0e25\u0e31\u0e01)")
       }
       message("  ", strrep("-", 45))
       grp <- ph$groups
@@ -409,10 +410,10 @@ cook_split <- function(data,
 
     if (int_sig) {
       # Interaction มีนัยสำคัญ → แสดง interaction เป็นหลัก
-      message("\n  \u2757 Interaction มีนัยสำคัญ (p < ", alpha, ")")
-      message("     ผลของ ", main_plot, " ขึ้นอยู่กับระดับของ ", sub_plot,
-              " (และในทางกลับกัน)")
-      message("     \u2192 แนะนำให้อ่านผลจากตารางจับคู่ผสม (interaction) เป็นหลัก")
+      message("\n  \u2757 Interaction \u0e21\u0e35\u0e19\u0e31\u0e22\u0e2a\u0e33\u0e04\u0e31\u0e0d (p < ", alpha, ")")
+      message("     \u0e1c\u0e25\u0e02\u0e2d\u0e07 ", main_plot, " \u0e02\u0e36\u0e49\u0e19\u0e2d\u0e22\u0e39\u0e48\u0e01\u0e31\u0e1a\u0e23\u0e30\u0e14\u0e31\u0e1a\u0e02\u0e2d\u0e07 ", sub_plot,
+              " (\u0e41\u0e25\u0e30\u0e43\u0e19\u0e17\u0e32\u0e07\u0e01\u0e25\u0e31\u0e1a\u0e01\u0e31\u0e19)")
+      message("     \u2192 \u0e41\u0e19\u0e30\u0e19\u0e33\u0e43\u0e2b\u0e49\u0e2d\u0e48\u0e32\u0e19\u0e1c\u0e25\u0e08\u0e32\u0e01\u0e15\u0e32\u0e23\u0e32\u0e07\u0e08\u0e31\u0e1a\u0e04\u0e39\u0e48\u0e1c\u0e2a\u0e21 (interaction) \u0e40\u0e1b\u0e47\u0e19\u0e2b\u0e25\u0e31\u0e01")
 
       .ph_section(res$posthoc_interaction, "interaction * (sub-plot error)")
       .ph_section(res$posthoc_main, paste(main_plot, "(main-plot error)"), dimmed = TRUE)
@@ -424,18 +425,18 @@ cook_split <- function(data,
     }
 
     if (!res$posthoc_needed) {
-      message("\n  \U0001F44D ไม่มีความแตกต่าง (p >= ", alpha, ")")
+      message("\n  \U0001F44D \u0e44\u0e21\u0e48\u0e21\u0e35\u0e04\u0e27\u0e32\u0e21\u0e41\u0e15\u0e01\u0e15\u0e48\u0e32\u0e07 (p >= ", alpha, ")")
     }
   }
 
   message(strrep("\u2500", 60))
-  message("\U0001F4CB $results$<var>$anova_table      → Split-plot ANOVA")
-  message("   $results$<var>$summary_table   → ตาราง interaction")
-  message("   $results$<var>$summary_main    → ตาราง main-plot")
-  message("   $results$<var>$summary_sub     → ตาราง sub-plot")
-  message("   $results$<var>$posthoc_main    → post-hoc (main-plot error)")
-  message("   $results$<var>$posthoc_sub     → post-hoc (sub-plot error)")
-  message("   $results$<var>$posthoc_interaction → post-hoc interaction")
-  message("   $results$<var>$error_terms     → df/MS ของแต่ละ error term")
+  message("\U0001F4CB $results$<var>$anova_table      \u2192 Split-plot ANOVA")
+  message("   $results$<var>$summary_table   \u2192 \u0e15\u0e32\u0e23\u0e32\u0e07 interaction")
+  message("   $results$<var>$summary_main    \u2192 \u0e15\u0e32\u0e23\u0e32\u0e07 main-plot")
+  message("   $results$<var>$summary_sub     \u2192 \u0e15\u0e32\u0e23\u0e32\u0e07 sub-plot")
+  message("   $results$<var>$posthoc_main    \u2192 post-hoc (main-plot error)")
+  message("   $results$<var>$posthoc_sub     \u2192 post-hoc (sub-plot error)")
+  message("   $results$<var>$posthoc_interaction \u2192 post-hoc interaction")
+  message("   $results$<var>$error_terms     \u2192 df/MS \u0e02\u0e2d\u0e07\u0e41\u0e15\u0e48\u0e25\u0e30 error term")
   message(strrep("\U0001F33E", 25))
 }

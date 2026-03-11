@@ -1,163 +1,194 @@
 ---
-title: "เริ่มต้นใช้งาน khaosuay"
+title: "เริ่มต้นใช้งาน khaosuay: การวิเคราะห์ข้อมูลเกษตรง่ายเหมือนหุงข้าว"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{เริ่มต้นใช้งาน khaosuay}
+  %\VignetteIndexEntry{เริ่มต้นใช้งาน khaosuay: การวิเคราะห์ข้อมูลเกษตรง่ายเหมือนหุงข้าว}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include = FALSE}
+```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 5
 )
 ```
 
-## แนะนำแพ็กเกจ
+## ภาพรวมของแพ็กเกจ (Package Overview)
 
-**khaosuay** เป็นแพ็กเกจ R สำหรับวิเคราะห์ข้อมูลเกษตรกรรม โดยใช้คำอุปมาจากการหุงข้าว ทำให้ workflow การวิเคราะห์แผนการทดลองเข้าใจง่ายและสนุกยิ่งขึ้น
+**khaosuay** (&quot;ข้าวสวย&quot;) นำเสนอแนวคิดการวิเคราะห์ข้อมูลทางเกษตรให้ง่ายเหมือนกับการ "หุงข้าว" โดยแบ่งการทำงานออกเป็น 4 ขั้นตอนหลัก:
 
-ขั้นตอนการวิเคราะห์ประกอบด้วย:
+| ขั้นตอน | ฟังก์ชัน | คำอุปมา | หน้าที่ |
+|---------|----------|---------|--------|
+| 1 | `wash_rice()` | ซาวข้าว | ทำความสะอาดข้อมูล ตรวจ outlier แนะนำสิ่งที่ต้องแก้ไข |
+| 2 | `taste_rice()` | ชิมข้าว | ตรวจ Assumptions (Normality, Equal Variance) |
+| 3 | `cook_crd()` / `cook_rcbd()` / `cook_split()` | หุงข้าว | วิเคราะห์สถิติตามแผนการทดลอง |
+| 4 | `plot_cooked()` | จัดจาน | สร้างกราฟพร้อมตีพิมพ์ (publication-ready) |
 
-| ฟังก์ชัน | ความหมาย | หน้าที่ |
-|---|---|---|
-| `wash_rice()` | ล้างข้าว | ทำความสะอาดข้อมูล |
-| `cook_rcbd()` | หุงข้าว RCBD | วิเคราะห์ ANOVA แบบ RCBD |
-| `top_with_sig()` | โรยหน้าด้วยสถิติ | ทดสอบความแตกต่างด้วย Duncan's test |
-| `serve_plate()` | จัดจานข้าวสวย | สร้างกราฟรายงาน |
+Workflow ของ khaosuay ออกแบบให้ **ฟังก์ชันแต่ละตัวส่งต่อผลลัพธ์ไปยังขั้นตอนถัดไปได้อัตโนมัติ** เช่น `wash_rice()` ส่งต่อไปยัง `taste_rice()` แล้วส่งต่อไปยัง `cook_*()` จากนั้นก็ `plot_cooked()` ได้อย่างราบรื่น
 
-## ติดตั้ง
-
-```{r install, eval = FALSE}
-# ติดตั้งจาก GitHub
-# install.packages("pak")
-pak::pak("khaosuay")
 ```
-
-## โหลดแพ็กเกจ
-
-```{r load}
-library(khaosuay)
+wash_rice() --> taste_rice() --> cook_crd() / cook_rcbd() / cook_split() --> plot_cooked()
+  (ซาวข้าว)      (ชิมข้าว)              (หุงข้าว)                           (จัดจาน)
 ```
 
 ---
 
-## ตัวอย่างการใช้งาน: ข้อมูลข้าว nitrogen
+## ติดตั้งแพ็กเกจ (Installation)
 
-ใช้ข้อมูล `gomez.nitrogen` จากแพ็กเกจ `agridat` ซึ่งเป็นการทดลองผลของปุ๋ยไนโตรเจนต่อผลผลิตข้าว
-
-### ขั้นที่ 1: เตรียมข้อมูล (ล้างข้าว)
-
-```{r step1, eval = FALSE}
-library(agridat)
-data(gomez.nitrogen)
-
-# ดูข้อมูลเบื้องต้น
-head(gomez.nitrogen)
+```{r, eval=FALSE}
+# จาก GitHub
+# install.packages("devtools")
+devtools::install_github("kanthjs/KhaoSuay")
 ```
-
-```{r step1-fake, echo = FALSE}
-# จำลองข้อมูลสำหรับ vignette
-set.seed(42)
-gomez_sim <- data.frame(
-  rep   = factor(rep(1:4, each = 6)),
-  trt   = factor(rep(paste0("N", c(0, 30, 60, 90, 120, 150)), 4)),
-  nitro = c(
-    4.51, 5.02, 5.88, 5.98, 5.71, 5.74,
-    4.78, 5.49, 5.92, 6.13, 5.86, 5.79,
-    4.33, 5.17, 5.90, 5.95, 5.82, 5.62,
-    4.20, 5.05, 5.78, 6.02, 5.65, 5.68
-  )
-)
-head(gomez_sim)
-```
-
-ทำความสะอาดข้อมูลด้วย `wash_rice()`:
-
-```{r step1-wash, eval = FALSE}
-clean_data <- wash_rice(gomez.nitrogen)
-```
-
-```{r step1-wash-fake, echo = FALSE}
-clean_data <- wash_rice(gomez_sim)
-```
-
-### ขั้นที่ 2: วิเคราะห์ RCBD (หุงข้าว)
-
-```{r step2, eval = FALSE}
-model <- cook_rcbd(
-  data      = clean_data,
-  outcome   = "nitro",
-  treatment = "trt",
-  block     = "rep"
-)
-summary(model)
-```
-
-```{r step2-fake, echo = FALSE}
-model <- cook_rcbd(
-  data      = clean_data,
-  outcome   = "nitro",
-  treatment = "trt",
-  block     = "rep"
-)
-summary(model)
-```
-
-### ขั้นที่ 3: ทดสอบความแตกต่าง (โรยหน้า)
-
-```{r step3, eval = FALSE}
-sig_groups <- top_with_sig(model, "trt")
-print(sig_groups)
-```
-
-```{r step3-fake, echo = FALSE}
-sig_groups <- top_with_sig(model, "trt")
-print(sig_groups)
-```
-
-ตัวอักษรที่เหมือนกันหมายความว่าไม่แตกต่างกันทางสถิติที่ระดับนัยสำคัญ 0.05
-
-### ขั้นที่ 4: สร้างกราฟ (จัดจาน)
-
-```{r step4, eval = FALSE}
-setup_thai_font()
-
-mean_data <- aggregate(nitro ~ trt, data = clean_data, FUN = mean)
-
-serve_plate(
-  data  = mean_data,
-  x     = "trt",
-  y     = "nitro",
-  title = "ผลผลิตข้าวเฉลี่ยตามระดับปุ๋ยไนโตรเจน"
-)
-```
-
----
-
-## สรุป Workflow
 
 ```{r}
 library(khaosuay)
-library(agridat)
-
-data(gomez.nitrogen)
-
-gomez.nitrogen |>
-  wash_rice() |>
-  (\(d) cook_rcbd(d, "nitro", "trt", "rep"))() |>
-  top_with_sig("trt")
 ```
-
-workflow นี้ประกอบด้วย 3 ขั้นตอนหลักต่อเนื่องกัน: ล้างข้อมูล → วิเคราะห์ RCBD → ทดสอบความแตกต่าง
 
 ---
 
-## ดูเพิ่มเติม
+## ตัวอย่างแบบเต็ม: วิเคราะห์ CRD (Quick Start)
 
-- `?wash_rice` — รายละเอียดการทำความสะอาดข้อมูล
-- `?cook_rcbd` — รายละเอียดการวิเคราะห์ RCBD
-- `?top_with_sig` — รายละเอียด Duncan's multiple range test
-- `?serve_plate` — รายละเอียดการสร้างกราฟ
-- `?setup_thai_font` — การตั้งค่าฟอนต์ภาษาไทย
+สมมติเรามีข้อมูลผลผลิตข้าว 4 สายพันธุ์ ทดลองแบบ CRD 4 ซ้ำ:
+
+```{r}
+# สร้างข้อมูลตัวอย่าง
+set.seed(123)
+rice_data <- data.frame(
+  variety = rep(c("KDML105", "RD41", "RD57", "PTT1"), each = 4),
+  rep     = rep(1:4, times = 4),
+  yield   = c(
+    rnorm(4, mean = 650, sd = 30),
+    rnorm(4, mean = 580, sd = 25),
+    rnorm(4, mean = 710, sd = 35),
+    rnorm(4, mean = 620, sd = 28)
+  )
+)
+head(rice_data)
+```
+
+### ขั้นตอนที่ 1: `wash_rice()` --- ซาวข้าว ทำความสะอาดข้อมูล
+
+```{r}
+washed <- wash_rice(
+  data          = rice_data,
+  treatment_col = "variety",
+  rep_col       = "rep",
+  design_check  = TRUE
+)
+```
+
+ดูผลการซาวข้าว:
+
+```{r}
+print(washed)
+```
+
+ข้อมูลที่สะอาดแล้วอยู่ใน `washed$data` และสามารถดูรายละเอียดเพิ่มเติมได้ที่ `washed$report` (สรุปผลทุกขั้นตอน) และ `washed$flagged` (แถวที่ถูก flag)
+
+### ขั้นตอนที่ 2: `taste_rice()` --- ชิมข้าว เช็คข้อมูลก่อนหุง
+
+```{r, fig.show='hide'}
+tasted <- taste_rice(
+  data      = washed,
+  response  = "yield",
+  treatment = "variety",
+  mode      = "both"
+)
+print(tasted)
+```
+
+ฟังก์ชันจะบอกชัดเจนว่าข้อมูลชุดนี้:
+
+- **Normal + Equal Variance** &rarr; ใช้ ANOVA (Parametric) ได้
+- **Normal + Unequal Variance** &rarr; ใช้ Welch's ANOVA
+- **Non-normal** &rarr; ใช้ Kruskal-Wallis (Non-parametric)
+
+### ขั้นตอนที่ 3: `cook_crd()` --- หุงข้าว วิเคราะห์สถิติ
+
+```{r}
+cooked <- cook_crd(
+  data      = washed,
+  response  = "yield",
+  treatment = "variety",
+  tasted    = tasted
+)
+```
+
+ดูตาราง Summary:
+
+```{r}
+cooked$results$yield$summary_table
+```
+
+### ขั้นตอนที่ 4: `plot_cooked()` --- จัดจาน สร้างกราฟ
+
+```{r, fig.width=7, fig.height=5}
+plot_cooked(
+  cooked       = cooked,
+  response     = "yield",
+  y_label      = "Yield (kg/rai)",
+  x_label      = "Rice Variety",
+  show_letters = TRUE
+)
+```
+
+---
+
+## สิ่งที่แต่ละฟังก์ชันทำให้อัตโนมัติ
+
+### `wash_rice()` ซาวข้าว
+
+- ปรับชื่อคอลัมน์ให้เป็นมาตรฐาน (lowercase, ลบช่องว่างส่วนเกิน)
+- **Smart Alias Dictionary** จับคู่ชื่อคอลัมน์ภาษาไทย/อังกฤษ เช่น "สายพันธุ์" &rarr; treatment
+- แปลง empty string &rarr; NA
+- แปลงคอลัมน์ที่ควรเป็นตัวเลข (character &rarr; numeric)
+- แปลงคอลัมน์ที่ควรเป็น factor อัตโนมัติ
+- ตรวจจับ outlier (IQR หรือ z-score)
+- ตรวจจับค่าติดลบ ค่าซ้ำ ค่านอกพิสัย
+- ตรวจสอบความสมดุลของแผนการทดลอง (`design_check = TRUE`)
+- ตรวจสอบพิกัด GPS (ถ้ามี)
+
+### `taste_rice()` ชิมข้าว
+
+- ทดสอบ Normality ด้วย Shapiro-Wilk test
+- ทดสอบ Homogeneity of Variance ด้วย Brown-Forsythe (Levene's) test
+- รองรับ 3 โหมด: `"quick"` (raw data), `"model"` (residuals), `"both"`
+- รองรับ Single Factor และ Factorial design
+- แสดง Diagnostic plots (QQ plot, Boxplot, Residuals vs Fitted)
+- สรุปผลเป็นคำแนะนำที่ชัดเจน
+
+### `cook_crd()` / `cook_rcbd()` / `cook_split()`
+
+- เลือก Parametric หรือ Non-parametric อัตโนมัติจาก `taste_rice()`
+- **Parametric**: Fisher's ANOVA &rarr; Post-hoc (Tukey / LSD / Duncan)
+- **Non-parametric**: Kruskal-Wallis &rarr; Dunn's test
+- คำนวณ CV%, MSE, Summary table พร้อม group letters (a, b, c)
+- `cook_split()` แยก error term ถูกต้องตาม main-plot / sub-plot
+
+### `plot_cooked()` จัดจาน
+
+- เลือก Bar graph หรือ Boxplot อัตโนมัติตามจำนวนซ้ำ
+- ใส่ตัวอักษรทางสถิติ (a, b, c) อัตโนมัติ
+- รองรับ Colorblind-friendly palette (viridis, grey, set2)
+- สไตล์ Publication-ready (พื้นขาว ไม่มี gridlines)
+- บันทึกเป็นไฟล์ได้ (`save_path`)
+
+---
+
+## แผนการทดลองที่รองรับ
+
+| แผนการทดลอง | ฟังก์ชัน | ลักษณะ |
+|-------------|----------|--------|
+| CRD | `cook_crd()` | Single factor หรือ Factorial |
+| RCBD | `cook_rcbd()` | Single factor หรือ Factorial in RCBD |
+| Split-plot | `cook_split()` | Main-plot + Sub-plot + Block |
+
+ดูรายละเอียดและตัวอย่างเพิ่มเติมได้ที่:
+
+- [การซาวข้าวและชิมข้าว](wash-and-taste.html) --- `wash_rice()` + `taste_rice()` อย่างละเอียด
+- [การหุงข้าว: CRD, RCBD, Split-plot](cooking-designs.html) --- เปรียบเทียบทั้ง 3 แผนการทดลอง
+- [การจัดจาน: สร้างกราฟสวยงาม](plotting-results.html) --- ปรับแต่ง `plot_cooked()` แบบต่าง ๆ

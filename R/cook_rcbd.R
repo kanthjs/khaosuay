@@ -20,6 +20,7 @@
 #'   \item{settings}{list ค่าที่ตั้ง}
 #'
 #' @examples
+#' \dontrun{
 #' # Single factor RCBD
 #' washed <- wash_rice(my_data, design_check = TRUE)
 #' tasted <- taste_rice(washed, response = "yield", block = "rep")
@@ -34,7 +35,7 @@
 #' # ดูผล
 #' cooked$results$yield$summary_table
 #' cooked$results$yield$cv_percent
-#'
+#' }
 #' @export
 cook_rcbd <- function(data,
                       response,
@@ -67,7 +68,7 @@ cook_rcbd <- function(data,
 
   for (resp in response) {
     if (!is.numeric(df[[resp]])) {
-      warning("'", resp, "' ไม่ใช่ตัวเลข — ข้าม")
+      warning("'", resp, "' \u0e44\u0e21\u0e48\u0e43\u0e0a\u0e48\u0e15\u0e31\u0e27\u0e40\u0e25\u0e02 \u2014 \u0e02\u0e49\u0e32\u0e21")
       next
     }
 
@@ -116,7 +117,7 @@ cook_rcbd <- function(data,
 
       if (analysis_path == "welch") {
         res$test_name <- paste0(res$test_name,
-          " [\u26A0\uFE0F variance ไม่เท่ากัน — ควร transform ข้อมูล]")
+          " [\u26A0\uFE0F variance \u0e44\u0e21\u0e48\u0e40\u0e17\u0e48\u0e32\u0e01\u0e31\u0e19 \u2014 \u0e04\u0e27\u0e23 transform \u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25]")
       }
 
       res$anova_table <- summary(model)

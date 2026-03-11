@@ -8,7 +8,7 @@
 .check_agricolae <- function() {
   if (!requireNamespace("agricolae", quietly = TRUE)) {
     stop(
-      "\U0001F4E6 ต้องติดตั้ง agricolae ก่อน:\n",
+      "\U0001F4E6 \u0e15\u0e49\u0e2d\u0e07\u0e15\u0e34\u0e14\u0e15\u0e31\u0e49\u0e07 agricolae \u0e01\u0e48\u0e2d\u0e19:\n",
       '  install.packages("agricolae")'
     )
   }
@@ -26,7 +26,7 @@
 .get_classification <- function(tasted, resp) {
   if (is.null(tasted)) return(NULL)
   if (!inherits(tasted, "tasted_rice")) {
-    warning("\u26A0\uFE0F tasted ไม่ใช่ tasted_rice object")
+    warning("\u26A0\uFE0F tasted \u0e44\u0e21\u0e48\u0e43\u0e0a\u0e48 tasted_rice object")
     return(NULL)
   }
   if (resp %in% names(tasted$details)) {
@@ -34,7 +34,7 @@
   }
   idx <- which(tasted$results$response == resp)
   if (length(idx) > 0) return(tasted$results$final_class[idx[1]])
-  warning("\u26A0\uFE0F ไม่พบ '", resp, "' ใน tasted object")
+  warning("\u26A0\uFE0F \u0e44\u0e21\u0e48\u0e1e\u0e1a '", resp, "' \u0e43\u0e19 tasted object")
   NULL
 }
 
@@ -177,7 +177,7 @@
 
   message("\n", strrep("\U0001F33E", 25))
   message("\U0001F35A  cook_", tolower(design),
-          " v1.1 — ผลการหุงข้าว (", design, ")")
+          " v1.1 \u2014 \u0e1c\u0e25\u0e01\u0e32\u0e23\u0e2b\u0e38\u0e07\u0e02\u0e49\u0e32\u0e27 (", design, ")")
   message(strrep("\u2500", 60))
 
   for (resp_name in names(all_results)) {
@@ -188,7 +188,7 @@
 
     src <- res$assumption$source
     src_label <- if (src == "taste_rice") {
-      "\u2705 จาก taste_rice (ไม่เช็คซ้ำ)"
+      "\u2705 \u0e08\u0e32\u0e01 taste_rice (\u0e44\u0e21\u0e48\u0e40\u0e0a\u0e47\u0e04\u0e0b\u0e49\u0e33)"
     } else {
       "\U0001F50D auto_check"
     }
@@ -234,16 +234,16 @@
         }
       }
     } else {
-      message("\n  \U0001F44D ไม่มีความแตกต่าง (p >= ", alpha,
-              ") — ไม่จำเป็นต้องเปรียบเทียบรายคู่")
+      message("\n  \U0001F44D \u0e44\u0e21\u0e48\u0e21\u0e35\u0e04\u0e27\u0e32\u0e21\u0e41\u0e15\u0e01\u0e15\u0e48\u0e32\u0e07 (p >= ", alpha,
+              ") \u2014 \u0e44\u0e21\u0e48\u0e08\u0e33\u0e40\u0e1b\u0e47\u0e19\u0e15\u0e49\u0e2d\u0e07\u0e40\u0e1b\u0e23\u0e35\u0e22\u0e1a\u0e40\u0e17\u0e35\u0e22\u0e1a\u0e23\u0e32\u0e22\u0e04\u0e39\u0e48")
     }
   }
 
   message(strrep("\u2500", 60))
-  message("\U0001F4CB $results$<var>$summary_table → ตารางพร้อมตีพิมพ์")
-  message("   $results$<var>$group_letters → กลุ่มอักษร (a, b, c)")
-  message("   $results$<var>$anova_table   → ANOVA table")
-  message("   $results$<var>$model         → aov object")
+  message("\U0001F4CB $results$<var>$summary_table \u2192 \u0e15\u0e32\u0e23\u0e32\u0e07\u0e1e\u0e23\u0e49\u0e2d\u0e21\u0e15\u0e35\u0e1e\u0e34\u0e21\u0e1e\u0e4c")
+  message("   $results$<var>$group_letters \u2192 \u0e01\u0e25\u0e38\u0e48\u0e21\u0e2d\u0e31\u0e01\u0e29\u0e23 (a, b, c)")
+  message("   $results$<var>$anova_table   \u2192 ANOVA table")
+  message("   $results$<var>$model         \u2192 aov object")
   message(strrep("\U0001F33E", 25))
 }
 
